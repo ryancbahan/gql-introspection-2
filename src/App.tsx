@@ -61,6 +61,20 @@ export function userLoggedInFetch(app: any) {
   };
 }
 
+function MyProvider({ children }: {children: React.ReactNode}) {
+  const app = useAppBridge();
+
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new HttpLink({
+      credentials: "include",
+      fetch: userLoggedInFetch(app),
+    }),
+  });
+
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+}
+
 function App() {
   const [paginationIndex, setPaginationIndex] = useState(0)
   const [queryValue, setQueryValue] = useState("");
@@ -76,20 +90,6 @@ function App() {
       setList(mutationList)
     }
   }, [])
-
-  function MyProvider({ children }: {children: React.ReactNode}) {
-    const app = useAppBridge();
-
-    const client = new ApolloClient({
-      cache: new InMemoryCache(),
-      link: new HttpLink({
-        credentials: "include",
-        fetch: userLoggedInFetch(app),
-      }),
-    });
-
-    return <ApolloProvider client={client}>{children}</ApolloProvider>;
-  }
 
   function renderArg(arg: any) {
     const { name, description } = arg
@@ -111,10 +111,10 @@ function App() {
     const { mutationInfo, mutationDocument, variableValues } = item
     const { args } = mutationInfo
 
-    const [mutation] = useMutation(mutationDocument);
 
     const onButtonClick = async () => {
       console.log('here')
+      const [mutation] = useMutation(mutationDocument);
       const result = await mutation({variables: variableValues})
       console.log('use mutation', result)
     }
