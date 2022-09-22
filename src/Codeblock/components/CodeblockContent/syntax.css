@@ -1,0 +1,468 @@
+pre[class*='language-'],
+code[class*='language-'] {
+  color: var(--codesyntax-color-plain);
+  tab-size: 2;
+  font: var(--font-code-font-code-base);
+  font-variant-ligatures: none;
+}
+
+pre[class*='language-']::selection,
+code[class*='language-']::selection,
+pre[class*='language-'] *::selection,
+code[class*='language-'] *::selection {
+  text-shadow: none;
+  background: #75a7ca;
+}
+
+@media print {
+  pre[class*='language-'],
+  code[class*='language-'] {
+    text-shadow: none;
+  }
+}
+
+/*********************************************************
+* Tokens
+*/
+.namespace {
+  opacity: 0.7;
+}
+
+.token.doctype .token.doctype-tag {
+  color: var(--codesyntax-color-doctypetag);
+}
+
+.token.doctype .token.name {
+  color: var(--codesyntax-color-doctypename);
+}
+
+.token.comment,
+.token.prolog {
+  color: var(--codesyntax-color-comment);
+}
+
+.token.punctuation {
+  color: var(--codesyntax-color-punctuation);
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.inserted,
+.token.unit {
+  color: var(--codesyntax-color-number);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.deleted {
+  color: var(--codesyntax-color-string);
+}
+
+.language-css .token.string.url {
+  text-decoration: underline;
+}
+
+.token.operator {
+  color: var(--codesyntax-color-operator);
+}
+
+.token.operator.arrow {
+  color: var(--codesyntax-color-operatorarrow);
+}
+
+.token.atrule {
+  color: var(--codesyntax-color-atrule);
+}
+
+.token.atrule .token.rule {
+  color: var(--codesyntax-color-atrulerule);
+}
+
+.token.atrule .token.url {
+  color: var(--codesyntax-color-atruleurl);
+}
+
+.token.atrule .token.url .token.function {
+  color: var(--codesyntax-color-atruleurlfunction);
+}
+
+.token.atrule .token.url .token.punctuation {
+  color: var(--codesyntax-color-atruleurlpunctuation);
+}
+
+.token.keyword {
+  color: var(--codesyntax-color-keyword);
+}
+
+.token.keyword.module,
+.token.keyword.control-flow {
+  color: var(--codesyntax-color-keywordmodule);
+}
+
+.token.function,
+.token.function .token.maybe-class-name {
+  color: var(--codesyntax-color-function);
+}
+
+.token.regex {
+  color: var(--codesyntax-color-regex);
+}
+
+.token.important {
+  color: var(--codesyntax-color-important);
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.constant {
+  color: var(--codesyntax-color-constant);
+}
+
+.token.class-name,
+.token.maybe-class-name {
+  color: var(--codesyntax-color-classname);
+}
+
+.token.console {
+  color: var(--codesyntax-color-console);
+}
+
+.token.parameter {
+  color: var(--codesyntax-color-parameter);
+}
+
+.token.interpolation {
+  color: var(--codesyntax-color-interpolation);
+}
+
+.token.punctuation.interpolation-punctuation {
+  color: var(--codesyntax-color-interpolationpunctuation);
+}
+
+.token.boolean {
+  color: var(--codesyntax-color-boolean);
+}
+
+.token.property,
+.token.variable,
+.token.imports .token.maybe-class-name,
+.token.exports .token.maybe-class-name {
+  color: var(--codesyntax-color-property);
+}
+
+.token.selector {
+  color: var(--codesyntax-color-selector);
+}
+
+.token.escape {
+  color: var(--codesyntax-color-escape);
+}
+
+.token.tag {
+  color: var(--codesyntax-color-tag);
+}
+
+.token.tag .token.punctuation {
+  color: var(--codesyntax-color-tagpunctuation);
+}
+
+.token.cdata {
+  color: var(--codesyntax-color-cdata);
+}
+
+.token.attr-name {
+  color: var(--codesyntax-color-attrname);
+}
+
+.token.attr-value,
+.token.attr-value .token.punctuation {
+  color: var(--codesyntax-color-attrvalue);
+}
+
+.token.attr-value .token.punctuation.attr-equals {
+  color: var(--codesyntax-color-attrvalueequals);
+}
+
+.token.entity {
+  color: var(--codesyntax-color-entity);
+}
+
+.token.namespace {
+  color: var(--codesyntax-color-namespace);
+}
+
+/*********************************************************
+* Language Specific
+*/
+pre[class*='language-ts'],
+code[class*='language-ts'],
+pre[class*='language-typescript'],
+code[class*='language-typescript'] {
+  color: var(--codesyntax-color-languagejsx);
+}
+
+pre[class*='language-css'],
+code[class*='language-css'] {
+  color: var(--codesyntax-color-languagecss);
+}
+
+pre[class*='language-html'],
+code[class*='language-html'] {
+  color: var(--codesyntax-color-languagehtml);
+}
+
+/*********************************************************
+* Language Specific : React/JSX/TSX
+*/
+
+pre[class*='language-jsx'],
+code[class*='language-jsx'],
+pre[class*='language-tsx'],
+code[class*='language-tsx'] {
+  color: var(--codesyntax-color-languagejsx);
+}
+
+.language-tsx .keyword,
+.language-jsx .keyword {
+  color: var(--codesyntax-color-languagejsxkeyword);
+}
+
+.language-tsx .token.keyword-import,
+.language-tsx .token.keyword-export,
+.language-tsx .token.keyword-from,
+.language-tsx .token.keyword-return,
+.language-jsx .token.keyword-import,
+.language-jsx .token.keyword-export,
+.language-jsx .token.keyword-from,
+.language-jsx .token.keyword-return {
+  color: var(--codesyntax-color-languagejsxkeywordalt);
+}
+
+.language-tsx .token.tag.punctuation,
+.language-jsx .token.tag.punctuation {
+  color: var(--codesyntax-color-languagejsxtag);
+}
+
+.language-tsx .token.tag.class-name,
+.language-jsx .token.tag.class-name {
+  color: var(--codesyntax-color-languagejsxtagclass);
+}
+
+.language-tsx .token.tag.script.language-javascript.punctuation,
+.language-jsx .token.tag.script.language-javascript.punctuation {
+  color: var(--codesyntax-color-languagejsxpunctuationscript);
+}
+
+.language-tsx .token.tag.script.language-javascript.script-punctuation,
+.language-jsx .token.tag.script.language-javascript.script-punctuation {
+  color: var(--codesyntax-color-punctuation);
+}
+
+/*********************************************************
+* Language Specific : Javascript
+*/
+
+pre[class*='language-js'],
+code[class*='language-js'],
+pre[class*='language-javascript'],
+code[class*='language-javascript'] {
+  color: var(--codesyntax-color-languagejsx);
+}
+
+/*********************************************************
+* Language Specific : GraphQL
+*/
+
+pre[class*='language-graphql'],
+code[class*='language-graphql'] {
+  color: var(--codesyntax-color-languagegraphql);
+}
+
+.language-graphql .punctuation {
+  color: var(--codesyntax-color-languagegraphqlpunctuation);
+}
+
+.language-graphql .keyword {
+  color: var(--codesyntax-color-languagegraphqlkeyword);
+}
+
+.language-graphql .definition {
+  color: var(--codesyntax-color-languagegraphqldefinition);
+}
+
+.language-graphql .scalar {
+  color: var(--codesyntax-color-languagegraphqlscalar);
+}
+
+.language-graphql .class-name {
+  color: var(--codesyntax-color-languagegraphqlclassname);
+}
+
+.language-graphql .keyword-mutation {
+  color: var(--codesyntax-color-languagegraphqlkeywordmutation);
+}
+
+.language-graphql .keyword-query {
+  color: var(--codesyntax-color-languagegraphqlkeywordquery);
+}
+
+.language-graphql .definition-mutation {
+  color: var(--codesyntax-color-languagegraphqldefinitionmutation);
+}
+
+.language-graphql .definition-query {
+  color: var(--codesyntax-color-languagegraphqldefinitionquery);
+}
+
+.language-graphql .variable-input {
+  color: var(--codesyntax-color-languagegraphqlvariableinput);
+}
+
+.language-graphql .atom-input {
+  color: var(--codesyntax-color-languagegraphqlatominput);
+}
+
+.language-graphql .property-mutation {
+  color: var(--codesyntax-color-languagegraphqlpropertymutation);
+}
+
+.language-graphql .property-query {
+  color: var(--codesyntax-color-languagegraphqlpropertyquery);
+}
+
+.language-graphql .attr-name {
+  color: var(--codesyntax-color-languagegraphqlattrname);
+}
+
+.language-graphql .object {
+  color: var(--codesyntax-color-languagegraphqlobject);
+}
+
+.language-graphql .property {
+  color: var(--codesyntax-color-languagegraphqlproperty);
+}
+
+/*********************************************************
+* Language Specific : RegEx
+*/
+
+.language-regex .token.anchor {
+  color: var(--codesyntax-color-languageregexanchor);
+}
+
+/*********************************************************
+* Language Specific : HTML
+*/
+
+.language-html .token.punctuation {
+  color: var(--codesyntax-color-languagehtmlpunctuation);
+}
+
+/*********************************************************
+* Language Specific : Liquid
+*/
+
+pre[class*='language-liquid'],
+code[class*='language-liquid'] {
+  color: var(--codesyntax-color-languageliquid);
+}
+
+.language-liquid .token.tag {
+  color: var(--codesyntax-color-languageliquidtag);
+}
+
+.language-liquid .token.attr-name,
+.language-liquid .token.attr-value {
+  color: var(--codesyntax-color-languageliquidtagattr);
+}
+
+.language-liquid .token.punctuation {
+  color: var(--codesyntax-color-languageliquidpunctuation);
+}
+
+.language-liquid .token.delimiter {
+  color: var(--codesyntax-color-languageliquiddelimiter);
+}
+
+.language-liquid .token.plain {
+  color: var(--codesyntax-color-languageliquidplain);
+}
+
+.language-liquid .token.comment {
+  color: var(--codesyntax-color-languageliquidcomment);
+}
+
+.language-liquid .token.object {
+  color: var(--codesyntax-color-languageliquidobject);
+}
+
+.language-liquid .token.keyword {
+  color: var(--codesyntax-color-languageliquidkeyword);
+}
+
+.language-liquid .token.keyword-in,
+.language-liquid .token.keyword-offset,
+.language-liquid .token.keyword-range,
+.language-liquid .token.keyword-reversed,
+.language-liquid .token.keyword-limit {
+  color: var(--codesyntax-color-languageliquidkeywordalt);
+}
+
+.language-liquid .token.function {
+  color: var(--codesyntax-color-languageliquidfunction);
+}
+
+.language-liquid .token.number {
+  color: var(--codesyntax-color-languageliquidnumber);
+}
+
+.language-liquid .token.string {
+  color: var(--codesyntax-color-languageliquidstring);
+}
+
+.language-liquid .token.boolean {
+  color: var(--codesyntax-color-languageliquidboolean);
+}
+
+.language-liquid .token.empty {
+  color: var(--codesyntax-color-languageliquidempty);
+}
+
+.language-liquid .token.operator {
+  color: var(--codesyntax-color-languageliquidoperator);
+}
+
+/*********************************************************
+* Line highlighting
+pre[data-line] {
+  position: relative;
+}
+
+pre[class*='language-'] > code[class*='language-'] {
+  position: relative;
+  z-index: 1;
+}
+
+.line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: #f7ebc6;
+  box-shadow: inset 5px 0 0 #f7d87c;
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+*/

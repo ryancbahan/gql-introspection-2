@@ -1,0 +1,52 @@
+.CodeblockTitleBar {
+  @include major-themes-css-modules(color, --codeblock-color-docs-text-default);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+}
+
+.CodeblockTitle {
+  font: var(--font-code-font-code-base);
+  border-radius: var(--size-100);
+  padding: var(--size-150) var(--size-150) var(--size-150) var(--size-200);
+  @include major-themes-css-modules(
+    background-color,
+    --codeblock-color-docs-background-surface-default
+  );
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 100%;
+  align-items: center;
+  min-height: var(--size-800);
+}
+
+.CodeblockTitlePrefix {
+  flex-shrink: 0;
+  @include major-themes-css-modules(
+    color,
+    --codeblock-color-docs-fill-icon-default
+  );
+  margin-right: var(--space-base-margin-copy-sm);
+  align-self: flex-start;
+}
+
+.CodeblockTitleContent {
+  flex: 1 1 100%;
+  overflow: hidden;
+}
+
+.BreakWords {
+  word-break: break-word;
+}
+
+.CodeblockTitlePostfix {
+  margin-left: var(--space-base-margin-copy-xxs);
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+
+.CodeblockTitleActions {
+  border-radius: var(--size-100);
+  flex: 0 0 auto;
+}

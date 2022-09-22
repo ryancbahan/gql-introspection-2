@@ -1,0 +1,1 @@
+export {CardTitled} from './CardTitled';

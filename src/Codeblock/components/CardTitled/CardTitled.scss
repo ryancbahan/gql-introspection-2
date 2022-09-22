@@ -1,0 +1,38 @@
+.Card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-100);
+  padding: var(--size-75);
+  box-shadow: var(--depth-elevation-2);
+  border: var(--size-25) solid;
+  border-radius: var(--size-200);
+  @include major-themes-css-modules(
+    border-color,
+    --codeblock-color-docs-border-default
+  );
+  @include major-themes-css-modules(
+    background-color,
+    --codeblock-color-docs-background-default
+  );
+}
+
+.CompactedContainer {
+  position: relative;
+}
+
+.Floating {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: var(--size-75);
+}
+
+.Oneliner {
+  padding: calc(var(--size-250) - var(--size-75)) var(--size-75);
+}
+
+.ActionPadding {
+  padding-right: calc(
+    var(--space-base-padding-inline-xxxl) + var(--size-75) - var(--size-250)
+  );
+}

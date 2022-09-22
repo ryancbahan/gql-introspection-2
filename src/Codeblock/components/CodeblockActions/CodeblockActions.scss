@@ -1,0 +1,19 @@
+.CodeblockActionsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  font: var(--font-code-font-code-base);
+}
+
+.CodeblockActionsItem {
+  flex: 0 0 auto;
+  margin-left: var(--space-base-margin-stack-xxs);
+  padding: 0;
+  min-width: var(--size-800);
+  height: var(--size-800);
+}
+
+.useNested {
+  min-width: var(--size-600);
+  height: var(--size-600);
+}
