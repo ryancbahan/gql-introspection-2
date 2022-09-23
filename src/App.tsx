@@ -129,12 +129,12 @@ function App() {
                   <p>{mutationInfo.description.value}</p>
                 </TextContainer>
               </Stack.Item>
-              <Stack.Item>
+              {/* <Stack.Item>
                 <Heading element='h3'>
                   Arguments
                 </Heading>
               </Stack.Item>
-              {args.map((arg: any) => renderArg(arg))}
+              {args.map((arg: any) => renderArg(arg))} */}
               <Stack.Item>
                 <TextContainer>
                   <Heading>Example</Heading>
