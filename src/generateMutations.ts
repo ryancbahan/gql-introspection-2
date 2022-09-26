@@ -17,6 +17,8 @@ import {
 import * as graphqlData from './generated/graphql'
 import * as graphqlDataTypes from './generated/graphql'
 
+const FIELDS = ['firstName', 'lastName', 'title']
+
 function getName(name: string): NameNode {
     return {
         kind: Kind.NAME,
@@ -142,19 +144,7 @@ const getEnumTypeValue = (argTypeName: string) => {
     }
 }
 
-const getNestedObjectValues = (node: InputObjectTypeDefinitionNode | ObjectTypeDefinitionNode, schema: GraphQLSchema, nextSelectionSet?: any) => {
-    const selectionSet: {kind: Kind, selections?: any[]} = {
-        kind: Kind.SELECTION_SET,
-        selections: []
-    }
-
-    const selection: {kind: Kind, name: NameNode, selectionSet?: any, arguments?: any[]} = {
-        kind: Kind.FIELD,
-        name: getName(node.name.value),
-        selectionSet,
-        arguments: []
-    }
-
+const getNestedObjectValues = (node: InputObjectTypeDefinitionNode, schema: GraphQLSchema) => {
     const output: { [key: string]: any } = {}
     const fields = node.fields
 
@@ -163,20 +153,7 @@ const getNestedObjectValues = (node: InputObjectTypeDefinitionNode | ObjectTypeD
         const fieldTyping = schema.getType(fieldTypeName);
         const nextNode = fieldTyping?.astNode
 
-        const innerSelectionSet: {kind: Kind, selections?: any[]} = {
-            kind: Kind.SELECTION_SET,
-            selections: []
-        }
-
-        const innerSelection: {kind: Kind, name: NameNode, selectionSet?: any, arguments?: any[]} = {
-            kind: Kind.FIELD,
-            name: getName(field.name.value),
-            selectionSet: innerSelectionSet,
-            arguments: []
-        }
-
-        const pushTo = nextSelectionSet ? nextSelectionSet : selectionSet
-        pushTo.selections.push(innerSelection)
+        if (!isNonNullType(field.type) && !FIELDS.find(f => f.includes(field?.name?.value))) return
 
         if (!nextNode) {
             output[field.name.value] = getScalarValue(fieldTypeName)
@@ -191,18 +168,16 @@ const getNestedObjectValues = (node: InputObjectTypeDefinitionNode | ObjectTypeD
         }
 
         if (nextNode?.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION) {
-            const { output: nextOutput } = getNestedObjectValues(nextNode, schema, innerSelectionSet)
+            const { output: nextOutput } = getNestedObjectValues(nextNode, schema)
             output[field.name.value] = nextOutput
-        }
-
-        // prune empty selection sets
-        // todo: only append if values
-        if (!innerSelection?.selectionSet?.selections?.length) {
-            delete innerSelection.selectionSet
         }
     })
 
-    return { output, selectionSet }
+    return { output }
+}
+
+function isNonNullType(type: TypeNode) {
+    return type.kind === 'NonNullType'
 }
 
 const generateArgsForMutation = (mutation: FieldDefinitionNode, schema: GraphQLSchema) => {
@@ -216,6 +191,8 @@ const generateArgsForMutation = (mutation: FieldDefinitionNode, schema: GraphQLS
         const fieldTyping = schema.getType(argTypeName);
         const nextNode = fieldTyping?.astNode
         const isList = isListType(argument.type)
+
+        if (!isNonNullType(argument.type) && !FIELDS.find(field => field.includes(argument.name.value))) return
 
         if (isList && !nextNode) {
             output[varName] = [getScalarValue(argTypeName)]
@@ -247,53 +224,69 @@ const generateArgsForMutation = (mutation: FieldDefinitionNode, schema: GraphQLS
     return { output }
 }
 
-const generateFieldsAndVarsForMutation = (mutation: FieldDefinitionNode, schema: GraphQLSchema) => {
-    const mutationTypeName = getTypeName(mutation.type)
+let isFirst = true
+
+const generateFieldsAndVarsForMutation = ({ node, parentNode = null, crossReferenceList = [], schema }) => {
+    const mutationTypeName = getTypeName(node.type)
     const mutationFieldTyping = schema.getType(mutationTypeName) as any
     const fields = mutationFieldTyping?.astNode?.fields
-    const selections = []
+    const selections: any[] = []
     const args: ArgumentNode[] = []
     const variableDefinitionsMap: {
         [varName: string]: VariableDefinitionNode
     } = {}
 
-    mutation?.arguments?.forEach(arg => {
+    node?.arguments?.forEach(arg => {
+        // if (!isNonNullType(arg.type)) return
+
         const varName = arg.name.value
         variableDefinitionsMap[varName] = getVariableDefinition(varName, arg.type)
         args.push(getVariable(arg.name.value, varName))
     })
 
-    const selectionSet: {kind: Kind, selections: any[]} = {
+    const selectionSet: { kind: Kind, selections: any[] } = {
         kind: Kind.SELECTION_SET,
         selections: []
     }
 
     selections.push({
         kind: Kind.FIELD,
-        name: getName(mutation.name.value),
+        name: getName(node.name.value),
         selectionSet,
         arguments: args
     })
 
+    const crossReferenceKey = `${parentNode?.name?.value}To${node?.name?.value}`
+
+    if (crossReferenceList.find(item => item === crossReferenceKey)) return { selections, variableDefinitionsMap }
+
+    crossReferenceList.push(crossReferenceKey)
+
     fields?.forEach((field: FieldDefinitionNode) => {
         const fieldTypeName = getTypeName(field.type);
         const fieldTyping = schema.getType(fieldTypeName);
-        const nextNode = fieldTyping?.astNode
 
-        const selection = {
-            kind: Kind.FIELD,
-            name: getName(field.name.value),
-            arguments: []
-        }
+        if (!field.name.value.includes('userErrors') && isFirst) return
 
-        selectionSet.selections.push(selection)
+        isFirst = false
 
-        if (nextNode?.kind === Kind.OBJECT_TYPE_DEFINITION) {
-            const { selectionSet: nextSelectionSet } = getNestedObjectValues(nextNode, schema)
-            const s = selection as any
-            s.selectionSet = nextSelectionSet
+        // if (!isNonNullType(field.type)) return
+
+        if (fieldTyping?.getFields) {
+            const { selections: nextSelections } = generateFieldsAndVarsForMutation({ node: field, parentNode: node, schema, crossReferenceList })
+            selectionSet.selections.push(nextSelections)
+        } else {
+            const selection = {
+                kind: Kind.FIELD,
+                name: getName(field.name.value),
+                arguments: []
+            }
+
+            selectionSet.selections.push(selection)
         }
     })
+
+    isFirst = true
 
     return { selections, variableDefinitionsMap }
 }
@@ -304,14 +297,17 @@ export function generateMutations(
 
     const mutationRoot = schema.getMutationType()!.astNode!
 
-    const outputs = mutationRoot.fields?.map(field => {
+    const testing = [mutationRoot.fields[21]]
+    const real = mutationRoot?.fields
+
+    const outputs = real.map(field => {
         const mutationInfo = {
             name: field.name.value,
             description: field.description,
             args: field.arguments
         }
         const { output: variableValues } = generateArgsForMutation(field, schema)
-        const { selections, variableDefinitionsMap } = generateFieldsAndVarsForMutation(field, schema)
+        const { selections, variableDefinitionsMap } = generateFieldsAndVarsForMutation({ node: field, schema })
 
         const selectionSet = {
             kind: Kind.SELECTION_SET,
