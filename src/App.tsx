@@ -4,6 +4,7 @@ import { buildClientSchema, printSchema, Source, buildSchema, IntrospectionQuery
 import enTranslations from '@shopify/polaris/locales/en.json';
 import synthwave84 from 'prism-react-renderer/themes/synthwave84';
 import Highlight, { defaultProps } from "prism-react-renderer";
+import { MutationResourceItem } from './ResourceItem';
 import {
   AppProvider,
   Page,
@@ -91,94 +92,11 @@ function App() {
     }
   }, [])
 
-  function renderArg(arg: any) {
-    const { name, description } = arg
-
-    return (
-      <span key={description}>
-        <Stack.Item>
-          <TextContainer spacing="tight">
-            <p>
-              <b>{name?.value}</b>: {description?.value}
-            </p>
-          </TextContainer>
-        </Stack.Item>
-      </span>
-    );
-  }
-
   function renderItem(item: any) {
     const { mutationInfo, mutationDocument, variableValues } = item
     const { args } = mutationInfo
 
-
-    const onButtonClick = async () => {
-      console.log('here')
-      const [mutation] = useMutation(mutationDocument);
-      const result = await mutation({variables: variableValues})
-      console.log('use mutation', result)
-    }
-
-    return (
-      <ResourceItem id={mutationInfo.name} onClick={() => { }}>
-        <Card title={mutationInfo.name}>
-          <Card.Section>
-            <Stack vertical>
-              <Stack.Item>
-                <TextContainer>
-                  <p>{mutationInfo.description.value}</p>
-                </TextContainer>
-              </Stack.Item>
-              {/* <Stack.Item>
-                <Heading element='h3'>
-                  Arguments
-                </Heading>
-              </Stack.Item>
-              {args.map((arg: any) => renderArg(arg))} */}
-              <Stack.Item>
-                <TextContainer>
-                  <Heading>Example</Heading>
-                  <p><TextStyle variation='strong'>Mutation</TextStyle></p>
-                  <Highlight {...defaultProps} theme={synthwave84} code={print(mutationDocument)} language="graphql">
-                    {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                      <pre className={className} style={style}>
-                        {tokens.map((line, i) => (
-                          <div {...getLineProps({ line, key: i })}>
-                            {line.map((token, key) => (
-                              <span {...getTokenProps({ token, key })} />
-                            ))}
-                          </div>
-                        ))}
-                      </pre>
-                    )}
-                  </Highlight>
-                  <p><TextStyle variation='strong'>Variables</TextStyle></p>
-                  <Highlight {...defaultProps} theme={synthwave84} code={JSON.stringify(variableValues, null, '\t')} language="jsx">
-                    {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                      <pre className={className} style={style}>
-                        {tokens.map((line, i) => (
-                          <div {...getLineProps({ line, key: i })}>
-                            {line.map((token, key) => (
-                              <span {...getTokenProps({ token, key })} />
-                            ))}
-                          </div>
-                        ))}
-                      </pre>
-                    )}
-                  </Highlight>
-                </TextContainer>
-              </Stack.Item>
-            </Stack>
-          </Card.Section>
-          <Card.Section>
-            <Stack alignment='center'>
-              <Button primary onClick={onButtonClick}>Run once</Button>
-              <Button>Run five times</Button>
-            </Stack>
-          </Card.Section>
-        </Card>
-      </ResourceItem>
-    )
+    return <MutationResourceItem {...item} />
   }
 
   const filters = [
