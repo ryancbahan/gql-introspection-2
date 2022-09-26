@@ -10,16 +10,10 @@ import {
   Page,
   ResourceList,
   ResourceItem,
-  Card,
   Stack,
-  Button,
   Filters,
   TextField,
   Frame,
-  Heading,
-  TextStyle,
-  TextContainer,
-  Link,
   Pagination
 } from '@shopify/polaris';
 import {
@@ -35,10 +29,17 @@ import {
 import { authenticatedFetch } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
 import { gql, useMutation } from "@apollo/client";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
 
 import {
   generateMutations,
 } from "./generateMutations";
+import { DetailsPage } from './DetailsPage';
 
 export function userLoggedInFetch(app: any) {
   const fetchFunction = authenticatedFetch(app);
@@ -62,7 +63,7 @@ export function userLoggedInFetch(app: any) {
   };
 }
 
-function MyProvider({ children }: {children: React.ReactNode}) {
+function MyProvider({ children }: { children: React.ReactNode }) {
   const app = useAppBridge();
 
   const client = new ApolloClient({
@@ -149,7 +150,7 @@ function App() {
   }
 
   const filteredItems = list
-    .filter(item => item.mutationInfo.name.includes(queryValue))
+    .filter(item => item.mutationInfo.name.toLowerCase().includes(queryValue.toLowerCase()))
     .slice(paginationIndex, paginationIndex + 10)
 
   return (
@@ -162,32 +163,37 @@ function App() {
         }}
       >
         <MyProvider>
-          <Frame>
-            <Page title="Dev Portal">
-              <Stack distribution='center' alignment='center'>
-                <Pagination
-                  hasPrevious={paginationIndex > 0}
-                  onPrevious={onPrevious}
-                  hasNext={filteredItems.length > 0}
-                  onNext={onNext}
-                />
-              </Stack>
-              <ResourceList
-                resourceName={resourceName}
-                items={filteredItems!}
-                filterControl={filterControl}
-                renderItem={renderItem}
-              />
-              <Stack distribution='center' alignment='center'>
-                <Pagination
-                  hasPrevious={paginationIndex > 0}
-                  onPrevious={onPrevious}
-                  hasNext={filteredItems.length > 0}
-                  onNext={onNext}
-                />
-              </Stack>
-            </Page>
-          </Frame>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Frame>
+                <Page title="Dev Portal">
+                  <Stack distribution='center' alignment='center'>
+                    <Pagination
+                      hasPrevious={paginationIndex > 0}
+                      onPrevious={onPrevious}
+                      hasNext={filteredItems.length > 0}
+                      onNext={onNext}
+                    />
+                  </Stack>
+                  <ResourceList
+                    resourceName={resourceName}
+                    items={filteredItems!}
+                    filterControl={filterControl}
+                    renderItem={renderItem}
+                  />
+                  <Stack distribution='center' alignment='center'>
+                    <Pagination
+                      hasPrevious={paginationIndex > 0}
+                      onPrevious={onPrevious}
+                      hasNext={filteredItems.length > 0}
+                      onNext={onNext}
+                    />
+                  </Stack>
+                </Page>
+              </Frame>} />
+              <Route path="/:mutation" element={<DetailsPage list={list} />} />
+            </Routes>
+          </Router>
         </MyProvider>
       </AppBridgeProvider>
     </AppProvider >
