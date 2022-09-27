@@ -3,12 +3,18 @@ import { Page, Layout, Card, Heading, TextContainer, Stack, TextStyle } from '@s
 import synthwave84 from 'prism-react-renderer/themes/synthwave84';
 import Highlight, { defaultProps } from "prism-react-renderer";
 import { useParams } from 'react-router-dom'
-import { print } from "graphql";
+import { print, graphql } from "graphql";
 
-export const DetailsPage = ({ list }) => {
+export const DetailsPage = ({ list, mockSchema }) => {
     const { mutation } = useParams()
 
     const { mutationInfo, mutationDocument, variableValues } = list.find(item => item.mutationInfo.name === mutation)
+
+    graphql({
+        schema: mockSchema,
+        source: print(mutationDocument),
+        variableValues
+      }).then(result => console.log('Got result', result))
 
     function renderArg(arg: any) {
         const { name, description } = arg
@@ -49,7 +55,7 @@ export const DetailsPage = ({ list }) => {
                             <p><TextStyle variation='strong'>Mutation</TextStyle></p>
                             <Highlight {...defaultProps} theme={synthwave84} code={print(mutationDocument)} language="graphql">
                                 {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                                    <pre className={className} style={style}>
+                                    <pre suppressContentEditableWarning={true} contentEditable className={className} style={style}>
                                         {tokens.map((line, i) => (
                                             <div {...getLineProps({ line, key: i })}>
                                                 {line.map((token, key) => (
@@ -63,7 +69,7 @@ export const DetailsPage = ({ list }) => {
                             <p><TextStyle variation='strong'>Variables</TextStyle></p>
                             <Highlight {...defaultProps} theme={synthwave84} code={JSON.stringify(variableValues, null, '\t')} language="jsx">
                                 {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                                    <pre className={className} style={style}>
+                                    <pre suppressContentEditableWarning={true} contentEditable className={className} style={style}>
                                         {tokens.map((line, i) => (
                                             <div {...getLineProps({ line, key: i })}>
                                                 {line.map((token, key) => (

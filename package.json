@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
+    "@graphql-tools/mock": "^8.7.6",
     "@shopify/app-bridge": "^2.0.22",
     "@shopify/app-bridge-react": "^2.0.26",
     "@shopify/app-bridge-utils": "^2.0.26",

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import introspectionQuery from '../graphql.schema.json'
-import { buildClientSchema, printSchema, Source, buildSchema, IntrospectionQuery, print } from 'graphql'
+import { buildClientSchema, printSchema, Source, buildSchema, IntrospectionQuery, print, GraphQLSchema } from 'graphql'
 import enTranslations from '@shopify/polaris/locales/en.json';
+import { addMocksToSchema, createMockStore } from '@graphql-tools/mock'
 import { HomePage } from './HomePage';
 import {
   AppProvider,
@@ -69,6 +70,7 @@ function MyProvider({ children }: { children: React.ReactNode }) {
 
 function App() {
   const [list, setList] = useState<any[]>([])
+  const [mockSchema, setMockSchema] = useState<GraphQLSchema | undefined>()
 
   useEffect(() => {
     if (!list.length) {
@@ -76,7 +78,10 @@ function App() {
       const schemaLanguage = printSchema(builtSchema);
       const source = new Source(schemaLanguage);
       const validSchema = buildSchema(source, { assumeValidSDL: true });
+      const store = createMockStore({ schema: validSchema })
+      const schemaWithMocks = addMocksToSchema({ schema: validSchema, store })
       const mutationList: any[] = generateMutations(validSchema)!;
+      setMockSchema(schemaWithMocks)
       setList(mutationList)
     }
   }, [])
@@ -95,7 +100,7 @@ function App() {
             <Router>
               <Routes>
                 <Route path="/" element={<HomePage list={list} />} />
-                <Route path="/:mutation" element={<DetailsPage list={list} />} />
+                <Route path="/:mutation" element={<DetailsPage list={list} mockSchema={mockSchema} />} />
               </Routes>
             </Router>
           </Frame>
