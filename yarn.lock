@@ -70,7 +70,7 @@
   "resolved" "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.19.1.tgz"
   "version" "7.19.1"
 
-"@babel/core@^7.0.0", "@babel/core@^7.0.0-0", "@babel/core@^7.14.0", "@babel/core@^7.17.10":
+"@babel/core@^7.14.0", "@babel/core@^7.17.10":
   "integrity" "sha512-liKoppandF3ZcBnIYFjfSDHZLKdLHGJRkoWtG8zQyGJBQfIYobpnVGI5+pLBNtS6psFLDzyq8+h5HiVljW9PNA=="
   "resolved" "https://registry.npmjs.org/@babel/core/-/core-7.17.10.tgz"
   "version" "7.17.10"
@@ -1034,7 +1034,7 @@
   "resolved" "https://registry.npmjs.org/@redis/bloom/-/bloom-1.0.2.tgz"
   "version" "1.0.2"
 
-"@redis/client@^1.0.0", "@redis/client@1.3.0":
+"@redis/client@1.3.0":
   "integrity" "sha512-XCFV60nloXAefDsPnYMjHGtvbtHR8fV5Om8cQ0JYqTNbWcQo/4AryzJ2luRj4blveWazRK/j40gES8M7Cp6cfQ=="
   "resolved" "https://registry.npmjs.org/@redis/client/-/client-1.3.0.tgz"
   "version" "1.3.0"
@@ -1229,7 +1229,7 @@
     "@types/node" "*"
     "form-data" "^3.0.0"
 
-"@types/node@*", "@types/node@>=13":
+"@types/node@*":
   "integrity" "sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw=="
   "resolved" "https://registry.npmjs.org/@types/node/-/node-17.0.23.tgz"
   "version" "17.0.23"
@@ -1700,7 +1700,7 @@
   dependencies:
     "fill-range" "^7.0.1"
 
-"browserslist@^4.21.3", "browserslist@>= 4.21.0":
+"browserslist@^4.21.3":
   "integrity" "sha512-CBHJJdDmgjl3daYjN5Cp5kbTf1mUhZoS+beLklHIvkOWscs83YAhLlF3Wsh/lciQYAcbBJgTOD44VtG31ZM4Hw=="
   "resolved" "https://registry.npmjs.org/browserslist/-/browserslist-4.21.4.tgz"
   "version" "4.21.4"
@@ -2192,7 +2192,7 @@
   "resolved" "https://registry.npmjs.org/cosmiconfig-typescript-loader/-/cosmiconfig-typescript-loader-4.1.0.tgz"
   "version" "4.1.0"
 
-"cosmiconfig@^7.0.0", "cosmiconfig@>=7", "cosmiconfig@7.0.1":
+"cosmiconfig@^7.0.0", "cosmiconfig@7.0.1":
   "integrity" "sha512-a1YWNUV2HwGimB7dU2s1wUMurNKjpx60HxBB6xUM8Re+2s1g1IIfJvFR0/iCF+XHdE0GMTKTuLR32UQff4TEyQ=="
   "resolved" "https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-7.0.1.tgz"
   "version" "7.0.1"
@@ -2458,7 +2458,7 @@
   "resolved" "https://registry.npmjs.org/encodeurl/-/encodeurl-1.0.2.tgz"
   "version" "1.0.2"
 
-"encoding@^0.1.0", "encoding@^0.1.12":
+"encoding@^0.1.12":
   "integrity" "sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A=="
   "resolved" "https://registry.npmjs.org/encoding/-/encoding-0.1.13.tgz"
   "version" "0.1.13"
@@ -2985,6 +2985,14 @@
     "ts-node" "^10.8.1"
     "tslib" "^2.4.0"
 
+"graphql-language-service@^5.0.6":
+  "integrity" "sha512-FjE23aTy45Lr5metxCv3ZgSKEZOzN7ERR+OFC1isV5mHxI0Ob8XxayLTYjQKrs8b3kOpvgTYmSmu6AyXOzYslg=="
+  "resolved" "https://registry.npmjs.org/graphql-language-service/-/graphql-language-service-5.0.6.tgz"
+  "version" "5.0.6"
+  dependencies:
+    "nullthrows" "^1.0.0"
+    "vscode-languageserver-types" "^3.15.1"
+
 "graphql-request@^5.0.0":
   "integrity" "sha512-SpVEnIo2J5k2+Zf76cUkdvIRaq5FMZvGQYnA4lUWYbc99m+fHh4CZYRRO/Ff4tCLQ613fzCm3SiDT64ubW5Gyw=="
   "resolved" "https://registry.npmjs.org/graphql-request/-/graphql-request-5.0.0.tgz"
@@ -2995,19 +3003,19 @@
     "extract-files" "^9.0.0"
     "form-data" "^3.0.0"
 
-"graphql-tag@^2.0.0", "graphql-tag@^2.11.0", "graphql-tag@^2.12.3":
+"graphql-tag@^2.11.0", "graphql-tag@^2.12.3":
   "integrity" "sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg=="
   "resolved" "https://registry.npmjs.org/graphql-tag/-/graphql-tag-2.12.6.tgz"
   "version" "2.12.6"
   dependencies:
     "tslib" "^2.1.0"
 
-"graphql-ws@^5.4.1", "graphql-ws@^5.5.5":
+"graphql-ws@^5.4.1":
   "integrity" "sha512-4EiZ3/UXYcjm+xFGP544/yW1+DVI8ZpKASFbzrV5EDTFWJp0ZvLl4Dy2fSZAzz9imKp5pZMIcjB0x/H69Pv/6w=="
   "resolved" "https://registry.npmjs.org/graphql-ws/-/graphql-ws-5.11.2.tgz"
   "version" "5.11.2"
 
-"graphql@*", "graphql@^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", "graphql@^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", "graphql@^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", "graphql@^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", "graphql@^14.0.0 || ^15.0.0 || ^16.0.0", "graphql@^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "graphql@^16.3.0", "graphql@^16.5.0", "graphql@>=0.11 <=16", "graphql@14 - 16":
+"graphql@^16.3.0", "graphql@^16.5.0":
   "integrity" "sha512-qbHgh8Ix+j/qY+a/ZcJnFQ+j8ezakqPiHwPiZhV/3PgGlgf96QMBB5/f2rkiC9sgLoy/xvT6TSiaf2nTHJh5iA=="
   "resolved" "https://registry.npmjs.org/graphql/-/graphql-16.5.0.tgz"
   "version" "16.5.0"
@@ -3496,6 +3504,11 @@
   "resolved" "https://registry.npmjs.org/json5/-/json5-2.2.1.tgz"
   "version" "2.2.1"
 
+"jsonc-parser@^3.2.0":
+  "integrity" "sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w=="
+  "resolved" "https://registry.npmjs.org/jsonc-parser/-/jsonc-parser-3.2.0.tgz"
+  "version" "3.2.0"
+
 "jsonify@~0.0.0":
   "integrity" "sha512-trvBk1ki43VZptdBI5rIlG4YOzyeH/WefQt5rj1grasPn4iiZWKet8nkgc4GlsAylaztn0qZfUYOiTsASJFdNA=="
   "resolved" "https://registry.npmjs.org/jsonify/-/jsonify-0.0.0.tgz"
@@ -3901,6 +3914,19 @@
   "resolved" "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
   "version" "1.0.4"
 
+"monaco-editor@^0.34.0":
+  "integrity" "sha512-VF+S5zG8wxfinLKLrWcl4WUizMx+LeJrG4PM/M78OhcwocpV0jiyhX/pG6Q9jIOhrb/ckYi6nHnaR5OojlOZCQ=="
+  "resolved" "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.34.0.tgz"
+  "version" "0.34.0"
+
+"monaco-graphql@^1.1.2":
+  "integrity" "sha512-3Z9+Zre3vSnJ41rI1jnxym3UlKyXYjRWw6Gk4j+9bU273VIe0G/EPxubctj23lAc3MxeOpe3zGzzYugriGdqlQ=="
+  "resolved" "https://registry.npmjs.org/monaco-graphql/-/monaco-graphql-1.1.2.tgz"
+  "version" "1.1.2"
+  dependencies:
+    "graphql-language-service" "^5.0.6"
+    "picomatch-browser" "^2.2.6"
+
 "mongodb-connection-string-url@^2.5.3":
   "integrity" "sha512-f+/WsED+xF4B74l3k9V/XkTVj5/fxFH2o5ToKXd8Iyi5UhM+sO9u0Ape17Mvl/GkZaFtM0HQnzAG5OTmhKw+tQ=="
   "resolved" "https://registry.npmjs.org/mongodb-connection-string-url/-/mongodb-connection-string-url-2.5.3.tgz"
@@ -4113,7 +4139,7 @@
     "gauge" "^4.0.3"
     "set-blocking" "^2.0.0"
 
-"nullthrows@^1.1.1":
+"nullthrows@^1.0.0", "nullthrows@^1.1.1":
   "integrity" "sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw=="
   "resolved" "https://registry.npmjs.org/nullthrows/-/nullthrows-1.1.1.tgz"
   "version" "1.1.1"
@@ -4393,7 +4419,7 @@
     "postgres-date" "~1.0.4"
     "postgres-interval" "^1.1.0"
 
-"pg@^8.7.3", "pg@>=8.0":
+"pg@^8.7.3":
   "integrity" "sha512-UXYN0ziKj+AeNNP7VDMwrehpACThH7LUl/p8TDFpEUuSejCUIwGSfxpHsPvtM6/WXFy6SU4E5RG4IJV/TZAGjw=="
   "resolved" "https://registry.npmjs.org/pg/-/pg-8.8.0.tgz"
   "version" "8.8.0"
@@ -4417,6 +4443,11 @@
   "integrity" "sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ=="
   "resolved" "https://registry.npmjs.org/picocolors/-/picocolors-1.0.0.tgz"
   "version" "1.0.0"
+
+"picomatch-browser@^2.2.6":
+  "integrity" "sha512-0ypsOQt9D4e3hziV8O4elD9uN0z/jtUEfxVRtNaAAtXIyUx9m/SzlO020i8YNL2aL/E6blOvvHQcin6HZlFy/w=="
+  "resolved" "https://registry.npmjs.org/picomatch-browser/-/picomatch-browser-2.2.6.tgz"
+  "version" "2.2.6"
 
 "picomatch@^2.0.4", "picomatch@^2.2.1", "picomatch@^2.2.2", "picomatch@^2.3.1":
   "integrity" "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="
@@ -4481,7 +4512,7 @@
   "resolved" "https://registry.npmjs.org/prepend-http/-/prepend-http-2.0.0.tgz"
   "version" "2.0.0"
 
-"prettier@^2.6.2", "prettier@>=2.0.0":
+"prettier@^2.6.2":
   "integrity" "sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew=="
   "resolved" "https://registry.npmjs.org/prettier/-/prettier-2.6.2.tgz"
   "version" "2.6.2"
@@ -4624,7 +4655,7 @@
     "minimist" "^1.2.0"
     "strip-json-comments" "~2.0.1"
 
-"react-dom@^16.14.0 || ^17.0.0", "react-dom@^17.0.2", "react-dom@>=16.6.0", "react-dom@>=16.8":
+"react-dom@^17.0.2":
   "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
   "version" "17.0.2"
@@ -4668,7 +4699,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@^16.0.0 || ^17.0.0", "react@^16.14.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@^17.0.2", "react@>=0.14.9", "react@>=16.6.0", "react@>=16.8", "react@17.0.2":
+"react@^17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -5316,7 +5347,7 @@
   "resolved" "https://registry.npmjs.org/ts-log/-/ts-log-2.2.5.tgz"
   "version" "2.2.5"
 
-"ts-node@^10.8.1", "ts-node@>=10":
+"ts-node@^10.8.1":
   "integrity" "sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw=="
   "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-10.9.1.tgz"
   "version" "10.9.1"
@@ -5375,7 +5406,7 @@
   dependencies:
     "is-typedarray" "^1.0.0"
 
-"typescript@^4.6.4", "typescript@>=2.7", "typescript@>=3":
+"typescript@^4.6.4":
   "integrity" "sha512-goMHfm00nWPa8UvR/CPSvykqf6dVV8x/dp0c5mFTMTIu0u0FlGWRioyy7Nn0PGAdHxpJZnuO/ut+PpQ8UiHAig=="
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.8.3.tgz"
   "version" "4.8.3"
@@ -5512,6 +5543,11 @@
   "resolved" "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   "version" "1.1.2"
 
+"vite-plugin-monaco-editor@^1.1.0":
+  "integrity" "sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww=="
+  "resolved" "https://registry.npmjs.org/vite-plugin-monaco-editor/-/vite-plugin-monaco-editor-1.1.0.tgz"
+  "version" "1.1.0"
+
 "vite@^2.9.7", "vite@^2.9.8":
   "integrity" "sha512-zsBGwn5UT3YS0NLSJ7hnR54+vUKfgzMUh/Z9CxF1YKEBVIe213+63jrFLmZphgGI5zXwQCSmqIdbPuE8NJywPw=="
   "resolved" "https://registry.npmjs.org/vite/-/vite-2.9.8.tgz"
@@ -5536,6 +5572,11 @@
     "tinypool" "^0.1.3"
     "tinyspy" "^0.3.2"
     "vite" "^2.9.7"
+
+"vscode-languageserver-types@^3.15.1":
+  "integrity" "sha512-zHhCWatviizPIq9B7Vh9uvrH6x3sK8itC84HkamnBWoDFJtzBf7SWlpLCZUit72b3os45h6RWQNC9xHRDF8dRA=="
+  "resolved" "https://registry.npmjs.org/vscode-languageserver-types/-/vscode-languageserver-types-3.17.2.tgz"
+  "version" "3.17.2"
 
 "wcwidth@^1.0.1":
   "integrity" "sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg=="
@@ -5655,7 +5696,7 @@
     "signal-exit" "^3.0.2"
     "typedarray-to-buffer" "^3.1.5"
 
-"ws@*", "ws@^8.3.0":
+"ws@^8.3.0":
   "integrity" "sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA=="
   "resolved" "https://registry.npmjs.org/ws/-/ws-8.8.1.tgz"
   "version" "8.8.1"

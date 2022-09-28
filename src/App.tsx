@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import introspectionQuery from '../graphql.schema.json'
-import { buildClientSchema, printSchema, Source, buildSchema, IntrospectionQuery, print, GraphQLSchema } from 'graphql'
-import enTranslations from '@shopify/polaris/locales/en.json';
-import { addMocksToSchema, createMockStore } from '@graphql-tools/mock'
-import { HomePage } from './HomePage';
+import React, { useState, useEffect } from "react";
+import introspectionQuery from "../graphql.schema.json";
 import {
-  AppProvider,
-  Frame,
-} from '@shopify/polaris';
+  buildClientSchema,
+  printSchema,
+  Source,
+  buildSchema,
+  IntrospectionQuery,
+  print,
+  GraphQLSchema,
+} from "graphql";
+import enTranslations from "@shopify/polaris/locales/en.json";
+import { addMocksToSchema, createMockStore } from "@graphql-tools/mock";
+import { HomePage } from "./HomePage";
+import { AppProvider, Frame } from "@shopify/polaris";
 import {
   ApolloClient,
   ApolloProvider,
@@ -21,16 +26,10 @@ import {
 import { authenticatedFetch } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
 import { gql, useMutation } from "@apollo/client";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import {
-  generateMutations,
-} from "./generateMutations";
-import { DetailsPage } from './DetailsPage';
+import { generateMutations } from "./generateMutations";
+import { DetailsPage } from "./DetailsPage";
 
 export function userLoggedInFetch(app: any) {
   const fetchFunction = authenticatedFetch(app);
@@ -69,22 +68,28 @@ function MyProvider({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  const [list, setList] = useState<any[]>([])
-  const [mockSchema, setMockSchema] = useState<GraphQLSchema | undefined>()
+  const [list, setList] = useState<any[]>([]);
+  const [mockSchema, setMockSchema] = useState<GraphQLSchema | undefined>();
+  const [introspectionResult, setIntrospectionResult] = useState<
+    GraphQLSchema | undefined
+  >();
 
   useEffect(() => {
     if (!list.length) {
-      const builtSchema = buildClientSchema(introspectionQuery as IntrospectionQuery);
+      const builtSchema = buildClientSchema(
+        introspectionQuery as IntrospectionQuery
+      );
       const schemaLanguage = printSchema(builtSchema);
       const source = new Source(schemaLanguage);
       const validSchema = buildSchema(source, { assumeValidSDL: true });
-      const store = createMockStore({ schema: validSchema })
-      const schemaWithMocks = addMocksToSchema({ schema: validSchema, store })
+      const store = createMockStore({ schema: validSchema });
+      const schemaWithMocks = addMocksToSchema({ schema: validSchema, store });
       const mutationList: any[] = generateMutations(validSchema)!;
-      setMockSchema(schemaWithMocks)
-      setList(mutationList)
+      setMockSchema(schemaWithMocks);
+      setIntrospectionResult(introspectionQuery);
+      setList(mutationList);
     }
-  }, [])
+  }, []);
 
   return (
     <AppProvider i18n={enTranslations}>
@@ -100,14 +105,23 @@ function App() {
             <Router>
               <Routes>
                 <Route path="/" element={<HomePage list={list} />} />
-                <Route path="/:mutation" element={<DetailsPage list={list} mockSchema={mockSchema} />} />
+                <Route
+                  path="/:mutation"
+                  element={
+                    <DetailsPage
+                      schema={introspectionResult}
+                      list={list}
+                      mockSchema={mockSchema}
+                    />
+                  }
+                />
               </Routes>
             </Router>
           </Frame>
         </MyProvider>
       </AppBridgeProvider>
-    </AppProvider >
-  )
+    </AppProvider>
+  );
 }
 
-export default App
+export default App;
