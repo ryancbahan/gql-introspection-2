@@ -84,8 +84,6 @@ export const DetailsPage = ({ list, mockSchema, schema }) => {
       ],
     });
 
-    console.log("test 1", queryModel.getValue());
-
     createEditor(opsRef, {
       theme: "vs-dark",
       model: queryModel,
@@ -124,6 +122,8 @@ export const DetailsPage = ({ list, mockSchema, schema }) => {
     );
   }
 
+  const [mutate] = useMutation(gql(queryModel.getValue()));
+
   const onButtonClick = () => {
     const query = queryModel.getValue();
     const vars = variablesModel.getValue();
@@ -136,6 +136,8 @@ export const DetailsPage = ({ list, mockSchema, schema }) => {
       }).then((result) => {
         resultsModel?.setValue(JSON.stringify(result, null, 2));
       });
+    } else {
+      mutate(variableValues).then((res) => console.log({ res }));
     }
   };
 
