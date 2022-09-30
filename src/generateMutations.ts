@@ -323,10 +323,10 @@ export function generateMutations(schema: GraphQLSchema) {
 
   console.log({ queryRoot });
 
-  const testing = [mutationRoot.fields[21]];
+  // const testing = [mutationRoot.fields[21]];
   const real = mutationRoot?.fields;
 
-  const outputs = real.map((field) => {
+  const outputs = real?.map((field) => {
     const mutationInfo = {
       name: field.name.value,
       description: field.description,
