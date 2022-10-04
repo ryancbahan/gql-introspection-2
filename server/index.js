@@ -5,6 +5,17 @@ import cookieParser from "cookie-parser";
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 import { Theme } from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
 import "dotenv/config";
+import {
+  buildClientSchema,
+  printSchema,
+  Source,
+  buildSchema,
+  getIntrospectionQuery,
+  print,
+  GraphQLSchema,
+} from "graphql";
+
+import fs from "fs";
 
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
@@ -101,25 +112,26 @@ export async function createServer(
   });
 
   app.post("/storefront-api", verifyRequest(app), async (req, res) => {
-    const accessToken = process.env.STOREFRONT_TOKEN;
-    const shop = process.env.SHOP;
+    // const accessToken = process.env.STOREFRONT_TOKEN;
+    // const shop = process.env.SHOP;
 
-    const storefrontClient = new Shopify.Clients.Storefront(shop, accessToken);
+    // const introspectionQuery = getIntrospectionQuery()
 
-    const products = await storefrontClient.query({
-      data: `{
-        products (first: 3) {
-          edges {
-            node {
-              id
-              title
-            }
-          }
-        }
-      }`,
-    });
+    // const storefrontClient = new Shopify.Clients.Storefront(shop, accessToken);
 
-    console.log("p", products?.body?.data);
+    // const schema = await storefrontClient.query({
+    //   data: introspectionQuery,
+    // })
+
+    // const builtSchema = buildClientSchema(schema.body.data);
+    // const schemaLanguage = printSchema(builtSchema);
+    // const source = new Source(schemaLanguage);
+    // const validSchema = buildSchema(source, { assumeValidSDL: true });
+
+    //   fs.writeFile('./storefront-schema.graphql', validSchema, function (err) {
+    //     if (err) return console.log(err);
+    //     console.log('schema written');
+    //   });
 
     res.status(200).send();
   });
@@ -189,7 +201,6 @@ export async function createServer(
     const serveStatic = await import("serve-static").then(
       ({ default: fn }) => fn
     );
-    const fs = await import("fs");
     app.use(compression());
     app.use(serveStatic(resolve("dist/client")));
     app.use("/*", (req, res, next) => {

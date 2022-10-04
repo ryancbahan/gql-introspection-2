@@ -16,6 +16,7 @@ import {
 } from "graphql";
 import * as graphqlData from "../generated/graphql";
 import * as graphqlDataTypes from "../generated/graphql";
+import * as storefrontData from "../generated/storefront-graphql";
 
 const FIELDS = ["firstName", "lastName", "title"];
 
@@ -131,12 +132,16 @@ const getCustomScalarValue = (argTypeName: string) => {
 
 const getEnumTypeValue = (argTypeName: string) => {
   const lookup = graphqlData as any;
+  const sfLookup = storefrontData as any;
 
   if (argTypeName === "CurrencyCode") {
     return graphqlData.CurrencyCode.Usd;
   }
 
-  const value = Object.keys(lookup[argTypeName])[0];
+  const value = lookup[argTypeName]
+    ? Object.keys(lookup[argTypeName])[0]
+    : Object.keys(sfLookup[argTypeName])[0];
+
   if (value) {
     return value;
   } else {
@@ -321,13 +326,13 @@ export function generateMutations(schema: GraphQLSchema) {
 
   const queryRoot = schema.getQueryType()!.astNode!;
 
-  console.log({ queryRoot });
+  // console.log({ queryRoot });
 
   // const testing = [mutationRoot.fields[21]];
   const real = mutationRoot?.fields;
 
-  console.log({ real });
-  console.log(real?.map((item) => item.name.value));
+  // console.log({ real });
+  // console.log(real?.map((item) => item.name.value));
 
   const outputs = real?.map((field) => {
     const mutationInfo = {

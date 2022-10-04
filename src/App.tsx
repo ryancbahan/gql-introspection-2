@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import introspectionQuery from "../graphql.schema.json";
+import storefrontIntrospectionQuery from "../storefront-graphql.schema.json";
 import {
   buildClientSchema,
   printSchema,
@@ -87,30 +88,38 @@ function App() {
       setIntrospectionResult(introspectionQuery);
       setList(mutationList);
 
-      // console.log({validSchema})
-      // console.log({schemaWithMocks})
+      const storefrontSchema = buildClientSchema(
+        storefrontIntrospectionQuery as IntrospectionQuery
+      );
+      const storefrontSchemaLanguage = printSchema(storefrontSchema);
+      const storefrontSource = new Source(storefrontSchemaLanguage);
+      const storefrontValidSchema = buildSchema(storefrontSource, {
+        assumeValidSDL: true,
+      });
 
-      const typeMap = Object.values(validSchema.getTypeMap());
-      const mapping = typeMap.reduce((acc, type) => {
-        const node = type?.astNode;
+      console.log("test", generateMutations(storefrontValidSchema));
 
-        if (!node) {
-          if (!acc[type.name]) acc[type.name] = [];
-          acc[type.name].push(type);
+      // const typeMap = Object.values(validSchema.getTypeMap());
+      // const mapping = typeMap.reduce((acc, type) => {
+      //   const node = type?.astNode;
 
-          return acc;
-        }
+      //   if (!node) {
+      //     if (!acc[type.name]) acc[type.name] = [];
+      //     acc[type.name].push(type);
 
-        const kind = node.kind;
+      //     return acc;
+      //   }
 
-        if (!acc[kind]) acc[kind] = [];
+      //   const kind = node.kind;
 
-        acc[kind].push(node);
+      //   if (!acc[kind]) acc[kind] = [];
 
-        return acc;
-      }, {});
+      //   acc[kind].push(node);
 
-      const inputs = mapping.InputObjectTypeDefinition;
+      //   return acc;
+      // }, {});
+
+      // const inputs = mapping.InputObjectTypeDefinition;
 
       // console.log({inputs})
       // console.log(inputs.map(input => input.name.value))

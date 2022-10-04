@@ -16,9 +16,6 @@ export const StoreSettings = () => {
   ) : null;
 
   useEffect(() => {
-    fetch("/storefront-api", { method: "POST" }).then((res) =>
-      console.log({ res })
-    );
     if (!themes.length) {
       fetch("/themes")
         .then((res) => res?.json())
