@@ -14,8 +14,8 @@ import {
   VariableDefinitionNode,
   DefinitionNode,
 } from "graphql";
-import * as graphqlData from "./generated/graphql";
-import * as graphqlDataTypes from "./generated/graphql";
+import * as graphqlData from "../generated/graphql";
+import * as graphqlDataTypes from "../generated/graphql";
 
 const FIELDS = ["firstName", "lastName", "title"];
 
@@ -325,6 +325,9 @@ export function generateMutations(schema: GraphQLSchema) {
 
   // const testing = [mutationRoot.fields[21]];
   const real = mutationRoot?.fields;
+
+  console.log({ real });
+  console.log(real?.map((item) => item.name.value));
 
   const outputs = real?.map((field) => {
     const mutationInfo = {

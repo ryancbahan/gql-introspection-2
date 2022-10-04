@@ -11,7 +11,7 @@ import {
 } from "graphql";
 import enTranslations from "@shopify/polaris/locales/en.json";
 import { addMocksToSchema, createMockStore } from "@graphql-tools/mock";
-import { HomePage } from "./HomePage";
+import { HomePage, DetailsPage } from "./components";
 import { AppProvider, Frame } from "@shopify/polaris";
 import {
   ApolloClient,
@@ -25,16 +25,14 @@ import {
 } from "@shopify/app-bridge-react";
 import { authenticatedFetch } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
-import { gql, useMutation } from "@apollo/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import { generateMutations } from "./generateMutations";
-import { DetailsPage } from "./DetailsPage";
+import { generateMutations } from "./utilities/generateMutations";
 
 export function userLoggedInFetch(app: any) {
   const fetchFunction = authenticatedFetch(app);
 
-  return async (uri: any, options: any) => {
+  return async (uri: any, options?: any) => {
     const response = await fetchFunction(uri, options);
 
     if (
@@ -88,6 +86,34 @@ function App() {
       setMockSchema(schemaWithMocks);
       setIntrospectionResult(introspectionQuery);
       setList(mutationList);
+
+      // console.log({validSchema})
+      // console.log({schemaWithMocks})
+
+      const typeMap = Object.values(validSchema.getTypeMap());
+      const mapping = typeMap.reduce((acc, type) => {
+        const node = type?.astNode;
+
+        if (!node) {
+          if (!acc[type.name]) acc[type.name] = [];
+          acc[type.name].push(type);
+
+          return acc;
+        }
+
+        const kind = node.kind;
+
+        if (!acc[kind]) acc[kind] = [];
+
+        acc[kind].push(node);
+
+        return acc;
+      }, {});
+
+      const inputs = mapping.InputObjectTypeDefinition;
+
+      // console.log({inputs})
+      // console.log(inputs.map(input => input.name.value))
     }
   }, []);
 
