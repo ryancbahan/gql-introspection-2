@@ -3,6 +3,7 @@ import { resolve } from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
+import { Theme } from "@shopify/shopify-api/dist/rest-resources/2022-07/index.js";
 import "dotenv/config";
 
 import applyAuthMiddleware from "./middleware/auth.js";
@@ -61,18 +62,66 @@ export async function createServer(
     }
   });
 
-  app.get("/products-count", verifyRequest(app), async (req, res) => {
+  app.get("/themes", verifyRequest(app), async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
       res,
       app.get("use-online-tokens")
     );
-    const { Product } = await import(
-      `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
+
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+    const themes = await Theme.all({
+      session,
+    });
+
+    res.status(200).send(themes);
+  });
+
+  app.post("/theme-switch", verifyRequest(app), async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
     );
 
-    const countData = await Product.count({ session });
-    res.status(200).send(countData);
+    const themeId = req.body?.id;
+
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+
+    const theme = new Theme({ session });
+
+    theme.id = themeId;
+    theme.role = "main";
+
+    const response = await theme.save({
+      update: true,
+    });
+
+    res.status(200).send();
+  });
+
+  app.post("/storefront-api", verifyRequest(app), async (req, res) => {
+    const accessToken = process.env.STOREFRONT_TOKEN;
+    const shop = process.env.SHOP;
+
+    const storefrontClient = new Shopify.Clients.Storefront(shop, accessToken);
+
+    const products = await storefrontClient.query({
+      data: `{
+        products (first: 3) {
+          edges {
+            node {
+              id
+              title
+            }
+          }
+        }
+      }`,
+    });
+
+    console.log("p", products?.body?.data);
+
+    res.status(200).send();
   });
 
   app.post("/graphql", verifyRequest(app), async (req, res) => {
