@@ -1,26 +1,53 @@
-import React, { useState, useEffect } from "react";
+import { GraphQLSchema } from "graphql";
+import React, { useState } from "react";
+import { generateArgsMap } from "../../../../utilities/generateArgsMap";
+import { Link } from "react-router-dom";
+
 import {
   Stack,
   TextContainer,
+  Select,
   Pagination,
   ResourceList,
   TextField,
   Filters,
-  Select,
+  ResourceItem,
+  Card,
+  Button,
 } from "@shopify/polaris";
-import { MutationResourceItem } from "../ResourceItem";
 
-export const OperationBrowser = ({ list: adminList, sfList }) => {
-  const [queryValue, setQueryValue] = useState("");
+export const Internal = ({ schema }) => {
   const [paginationIndex, setPaginationIndex] = useState(0);
-  const [selected, setSelected] = useState("admin");
+  const [queryValue, setQueryValue] = useState("");
 
-  const list = selected === "admin" ? adminList : sfList;
+  const { mutations: list } = generateArgsMap(schema);
 
-  const options = [
-    { label: "Admin API", value: "admin" },
-    { label: "Storefront API", value: "storefront" },
-  ];
+  const onPrevious = () => {
+    if (paginationIndex === 0 || !filteredItems.length) {
+      setPaginationIndex(0);
+      return;
+    }
+    setPaginationIndex(paginationIndex - 10);
+  };
+
+  const onNext = () => {
+    if (!filteredItems.length) {
+      setPaginationIndex(paginationIndex - 10);
+      return;
+    }
+    setPaginationIndex(paginationIndex + 10);
+  };
+
+  const filteredItems = list
+    // .filter((item) =>
+    //     item?.mutationInfo?.name.toLowerCase().includes(queryValue.toLowerCase())
+    // )
+    .slice(paginationIndex, paginationIndex + 10);
+
+  const resourceName = {
+    singular: "available mutations",
+    plural: "available mutations",
+  };
 
   const filters = [
     {
@@ -49,50 +76,27 @@ export const OperationBrowser = ({ list: adminList, sfList }) => {
     />
   );
 
-  const resourceName = {
-    singular: "available mutations",
-    plural: "available mutations",
-  };
-
-  const filteredItems = list
-    .filter((item) =>
-      item.mutationInfo.name.toLowerCase().includes(queryValue.toLowerCase())
-    )
-    .slice(paginationIndex, paginationIndex + 10);
-
   function renderItem(item: any) {
-    const { mutationInfo, mutationDocument, variableValues } = item;
-    const { args } = mutationInfo;
-
-    return <MutationResourceItem {...item} />;
+    return (
+      <ResourceItem>
+        <Card title={item.name}>
+          <Card.Section>
+            <p>{item.description}</p>
+          </Card.Section>
+          <Card.Section>
+            <Link to={`/internal/${item.name}`}>
+              <Button primary>View details</Button>
+            </Link>
+          </Card.Section>
+        </Card>
+      </ResourceItem>
+    );
   }
-
-  const onPrevious = () => {
-    if (paginationIndex === 0 || !filteredItems.length) {
-      setPaginationIndex(0);
-      return;
-    }
-    setPaginationIndex(paginationIndex - 10);
-  };
-
-  const onNext = () => {
-    if (!filteredItems.length) {
-      setPaginationIndex(paginationIndex - 10);
-      return;
-    }
-    setPaginationIndex(paginationIndex + 10);
-  };
 
   return (
     <>
       <TextContainer>
         <p></p>
-        <Select
-          label="Choose schema"
-          options={options}
-          onChange={(val) => setSelected(val)}
-          value={selected}
-        />
       </TextContainer>
       <Stack distribution="center" alignment="center" spacing="loose">
         <Stack.Item>

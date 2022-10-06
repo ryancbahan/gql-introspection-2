@@ -7,12 +7,16 @@ import {
   Source,
   buildSchema,
   IntrospectionQuery,
-  print,
   GraphQLSchema,
 } from "graphql";
 import enTranslations from "@shopify/polaris/locales/en.json";
 import { addMocksToSchema, createMockStore } from "@graphql-tools/mock";
-import { HomePage, DetailsPage } from "./components";
+import {
+  HomePage,
+  DetailsPage,
+  InternalDetailsPage,
+  DataSetEditor,
+} from "./components";
 import { AppProvider, Frame } from "@shopify/polaris";
 import {
   ApolloClient,
@@ -24,33 +28,10 @@ import {
   Provider as AppBridgeProvider,
   useAppBridge,
 } from "@shopify/app-bridge-react";
-import { authenticatedFetch } from "@shopify/app-bridge-utils";
-import { Redirect } from "@shopify/app-bridge/actions";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { userLoggedInFetch } from "./utilities/fetch";
 
 import { generateMutations } from "./utilities/generateMutations";
-
-export function userLoggedInFetch(app: any) {
-  const fetchFunction = authenticatedFetch(app);
-
-  return async (uri: any, options?: any) => {
-    const response = await fetchFunction(uri, options);
-
-    if (
-      response.headers.get("X-Shopify-API-Request-Failure-Reauthorize") === "1"
-    ) {
-      const authUrlHeader = response.headers.get(
-        "X-Shopify-API-Request-Failure-Reauthorize-Url"
-      );
-
-      const redirect = Redirect.create(app);
-      redirect.dispatch(Redirect.Action.APP, authUrlHeader || `/auth`);
-      return null;
-    }
-
-    return response;
-  };
-}
 
 function MyProvider({ children }: { children: React.ReactNode }) {
   const app = useAppBridge();
@@ -68,7 +49,9 @@ function MyProvider({ children }: { children: React.ReactNode }) {
 
 function App() {
   const [list, setList] = useState<any[]>([]);
+  const [sfList, setSfList] = useState<any[]>([]);
   const [mockSchema, setMockSchema] = useState<GraphQLSchema | undefined>();
+  const [schema, setSchema] = useState<GraphQLSchema | undefined>();
   const [introspectionResult, setIntrospectionResult] = useState<
     GraphQLSchema | undefined
   >();
@@ -84,6 +67,7 @@ function App() {
       const store = createMockStore({ schema: validSchema });
       const schemaWithMocks = addMocksToSchema({ schema: validSchema, store });
       const mutationList: any[] = generateMutations(validSchema)!;
+      setSchema(validSchema);
       setMockSchema(schemaWithMocks);
       setIntrospectionResult(introspectionQuery);
       setList(mutationList);
@@ -97,32 +81,8 @@ function App() {
         assumeValidSDL: true,
       });
 
-      console.log("test", generateMutations(storefrontValidSchema));
-
-      // const typeMap = Object.values(validSchema.getTypeMap());
-      // const mapping = typeMap.reduce((acc, type) => {
-      //   const node = type?.astNode;
-
-      //   if (!node) {
-      //     if (!acc[type.name]) acc[type.name] = [];
-      //     acc[type.name].push(type);
-
-      //     return acc;
-      //   }
-
-      //   const kind = node.kind;
-
-      //   if (!acc[kind]) acc[kind] = [];
-
-      //   acc[kind].push(node);
-
-      //   return acc;
-      // }, {});
-
-      // const inputs = mapping.InputObjectTypeDefinition;
-
-      // console.log({inputs})
-      // console.log(inputs.map(input => input.name.value))
+      const storefrontMutations = generateMutations(storefrontValidSchema);
+      setSfList(storefrontMutations);
     }
   }, []);
 
@@ -139,16 +99,30 @@ function App() {
           <Frame>
             <Router>
               <Routes>
-                <Route path="/" element={<HomePage list={list} />} />
+                <Route
+                  path="/"
+                  element={
+                    <HomePage schema={schema} list={list} sfList={sfList} />
+                  }
+                />
                 <Route
                   path="/:mutation"
                   element={
                     <DetailsPage
                       schema={introspectionResult}
                       list={list}
+                      sfList={sfList}
                       mockSchema={mockSchema}
                     />
                   }
+                />
+                <Route
+                  path="/internal/:mutation"
+                  element={<InternalDetailsPage schema={schema} />}
+                />
+                <Route
+                  path="/internal/:mutation/:dataSetId"
+                  element={<DataSetEditor />}
                 />
               </Routes>
             </Router>

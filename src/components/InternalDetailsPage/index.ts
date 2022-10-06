@@ -1,0 +1,1 @@
+export { InternalDetailsPage } from "./InternalDetailsPage";

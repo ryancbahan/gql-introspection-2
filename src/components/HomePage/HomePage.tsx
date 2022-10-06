@@ -12,9 +12,14 @@ import {
   Button,
   Layout,
 } from "@shopify/polaris";
-import { StoreSettings, OperationBrowser, QuickStart } from "./components";
+import {
+  StoreSettings,
+  OperationBrowser,
+  QuickStart,
+  Internal,
+} from "./components";
 
-export const HomePage = ({ list }) => {
+export const HomePage = ({ list, sfList, schema }) => {
   const [selectedTab, setSelectedTab] = useState(0);
 
   const tabs = [
@@ -29,7 +34,7 @@ export const HomePage = ({ list }) => {
       id: "browse",
       content: "Browse",
       panelID: "browse",
-      component: <OperationBrowser list={list} />,
+      component: <OperationBrowser list={list} sfList={sfList} />,
     },
     {
       id: "favorites",
@@ -53,7 +58,7 @@ export const HomePage = ({ list }) => {
       id: "internal",
       content: "Internal",
       panelID: "internal",
-      component: <div>hello world</div>,
+      component: <Internal schema={schema} />,
     },
   ];
 

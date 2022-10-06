@@ -73,6 +73,42 @@ export async function createServer(
     }
   });
 
+  app.post("/storefront-api", verifyRequest(app), async (req, res) => {
+    // const accessToken = process.env.STOREFRONT_TOKEN;
+    // const shop = process.env.SHOP;
+
+    // const introspectionQuery = getIntrospectionQuery()
+
+    // const storefrontClient = new Shopify.Clients.Storefront(shop, accessToken);
+
+    // const schema = await storefrontClient.query({
+    //   data: introspectionQuery,
+    // })
+
+    // const builtSchema = buildClientSchema(schema.body.data);
+    // const schemaLanguage = printSchema(builtSchema);
+    // const source = new Source(schemaLanguage);
+    // const validSchema = buildSchema(source, { assumeValidSDL: true });
+
+    //   fs.writeFile('./storefront-schema.graphql', validSchema, function (err) {
+    //     if (err) return console.log(err);
+    //     console.log('schema written');
+    //   });
+
+    res.status(200).send();
+  });
+
+  app.post("/graphql", verifyRequest(app), async (req, res) => {
+    try {
+      const response = await Shopify.Utils.graphqlProxy(req, res);
+      res.status(200).send(response.body);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  });
+
+  app.use(express.json());
+
   app.get("/themes", verifyRequest(app), async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
@@ -110,42 +146,6 @@ export async function createServer(
 
     res.status(200).send();
   });
-
-  app.post("/storefront-api", verifyRequest(app), async (req, res) => {
-    // const accessToken = process.env.STOREFRONT_TOKEN;
-    // const shop = process.env.SHOP;
-
-    // const introspectionQuery = getIntrospectionQuery()
-
-    // const storefrontClient = new Shopify.Clients.Storefront(shop, accessToken);
-
-    // const schema = await storefrontClient.query({
-    //   data: introspectionQuery,
-    // })
-
-    // const builtSchema = buildClientSchema(schema.body.data);
-    // const schemaLanguage = printSchema(builtSchema);
-    // const source = new Source(schemaLanguage);
-    // const validSchema = buildSchema(source, { assumeValidSDL: true });
-
-    //   fs.writeFile('./storefront-schema.graphql', validSchema, function (err) {
-    //     if (err) return console.log(err);
-    //     console.log('schema written');
-    //   });
-
-    res.status(200).send();
-  });
-
-  app.post("/graphql", verifyRequest(app), async (req, res) => {
-    try {
-      const response = await Shopify.Utils.graphqlProxy(req, res);
-      res.status(200).send(response.body);
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
-  });
-
-  app.use(express.json());
 
   app.use((req, res, next) => {
     const shop = req.query.shop;

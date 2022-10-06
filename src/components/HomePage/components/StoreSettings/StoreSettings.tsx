@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { userLoggedInFetch } from "../../../../App";
+import { userLoggedInFetch } from "../../../../utilities/fetch";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Select, Button, Stack, Card, Toast } from "@shopify/polaris";
 

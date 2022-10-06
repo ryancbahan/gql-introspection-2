@@ -18,7 +18,7 @@ import { Uri, editor, KeyMod, KeyCode, languages } from "monaco-editor";
 import { initializeMode } from "monaco-graphql/esm/initializeMode";
 import { gql, useMutation } from "@apollo/client";
 
-export const DetailsPage = ({ list, mockSchema, schema }) => {
+export const DetailsPage = ({ list, mockSchema, schema, sfList }) => {
   const { mutation } = useParams();
   const [collapsibleOpen, setCollapsibleOpen] = useState(false);
   const [checked, setChecked] = useState(false);
