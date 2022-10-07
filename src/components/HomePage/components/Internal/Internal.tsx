@@ -1,4 +1,3 @@
-import { GraphQLSchema } from "graphql";
 import React, { useState } from "react";
 import { generateArgsMap } from "../../../../utilities/generateArgsMap";
 import { Link } from "react-router-dom";
@@ -15,12 +14,33 @@ import {
   Card,
   Button,
 } from "@shopify/polaris";
+import {
+  buildClientSchema,
+  printSchema,
+  Source,
+  buildSchema,
+  IntrospectionQuery,
+  GraphQLSchema,
+} from "graphql";
+import { addMocksToSchema, createMockStore } from "@graphql-tools/mock";
+import { generateMutations } from "../../../../utilities/generateMutations";
+import introspectionQuery from "../../../../../graphql.schema.json";
 
-export const Internal = ({ schema }) => {
+export const Internal = () => {
   const [paginationIndex, setPaginationIndex] = useState(0);
   const [queryValue, setQueryValue] = useState("");
 
-  const { mutations: list } = generateArgsMap(schema);
+  const builtSchema = buildClientSchema(
+    introspectionQuery as IntrospectionQuery
+  );
+  const schemaLanguage = printSchema(builtSchema);
+  const source = new Source(schemaLanguage);
+  const validSchema = buildSchema(source, { assumeValidSDL: true });
+  const store = createMockStore({ schema: validSchema });
+  const schemaWithMocks = addMocksToSchema({ schema: validSchema, store });
+  const mutationList: any[] = generateMutations(validSchema)!;
+
+  const { mutations: list } = generateArgsMap(validSchema);
 
   const onPrevious = () => {
     if (paginationIndex === 0 || !filteredItems.length) {

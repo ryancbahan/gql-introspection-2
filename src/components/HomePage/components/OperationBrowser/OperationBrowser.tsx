@@ -11,21 +11,31 @@ import {
 import { MutationResourceItem } from "../ResourceItem";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { userLoggedInFetch } from "../../../../utilities/fetch";
+import { Schema } from "../../../../types";
 
-export const OperationBrowser = ({ list: adminList, sfList }) => {
+export const OperationBrowser = () => {
   const app = useAppBridge();
   const fetch = userLoggedInFetch(app);
   const [queryValue, setQueryValue] = useState("");
   const [paginationIndex, setPaginationIndex] = useState(0);
   const [selected, setSelected] = useState("admin");
+  const [adminApiList, setAdminApiList] = useState([]);
+  const [storefrontApiList, setStorefrontApiList] = useState([]);
 
-  fetch("/admin-api/mutations");
+  useEffect(() => {
+    fetch("/admin-api/mutations")
+      .then((res) => res?.json())
+      .then((json) => setAdminApiList(json.data));
+    fetch("/storefront-api/mutations")
+      .then((res) => res?.json())
+      .then((json) => setStorefrontApiList(json.data));
+  }, []);
 
-  const list = selected === "admin" ? adminList : sfList;
+  const list = selected === Schema.AdminApi ? adminApiList : storefrontApiList;
 
   const options = [
-    { label: "Admin API", value: "admin" },
-    { label: "Storefront API", value: "storefront" },
+    { label: "Admin API", value: Schema.AdminApi },
+    { label: "Storefront API", value: Schema.StorefrontApi },
   ];
 
   const filters = [
@@ -70,7 +80,7 @@ export const OperationBrowser = ({ list: adminList, sfList }) => {
     const { mutationInfo, mutationDocument, variableValues } = item;
     const { args } = mutationInfo;
 
-    return <MutationResourceItem {...item} />;
+    return <MutationResourceItem {...item} schema={selected} />;
   }
 
   const onPrevious = () => {

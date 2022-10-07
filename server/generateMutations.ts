@@ -14,9 +14,9 @@ import {
   VariableDefinitionNode,
   DefinitionNode,
 } from "graphql";
-import * as graphqlData from "../generated/graphql";
-import * as graphqlDataTypes from "../generated/graphql";
-import * as storefrontData from "../generated/storefront-graphql";
+import * as graphqlData from "../src/generated/graphql.tsx";
+import * as graphqlDataTypes from "../src/generated/graphql.tsx";
+import * as storefrontData from "../src/generated/storefront-graphql.tsx";
 
 const FIELDS = ["firstName", "lastName", "title"];
 

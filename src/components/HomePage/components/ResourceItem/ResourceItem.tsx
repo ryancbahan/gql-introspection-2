@@ -16,6 +16,7 @@ export const MutationResourceItem = ({
   mutationInfo,
   mutationDocument,
   variableValues,
+  schema,
 }) => {
   const [toastActive, setToastActive] = useState(false);
 
@@ -52,7 +53,7 @@ export const MutationResourceItem = ({
             <Button primary onClick={onButtonClick}>
               Run once
             </Button>
-            <Link to={mutationInfo.name}>
+            <Link to={`${schema}/${mutationInfo.name}`}>
               <Button>More options</Button>
             </Link>
           </Stack>

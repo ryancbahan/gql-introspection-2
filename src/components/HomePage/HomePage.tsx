@@ -19,7 +19,7 @@ import {
   Internal,
 } from "./components";
 
-export const HomePage = ({ list, sfList, schema }) => {
+export const HomePage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
   const tabs = [
@@ -34,7 +34,7 @@ export const HomePage = ({ list, sfList, schema }) => {
       id: "browse",
       content: "Browse",
       panelID: "browse",
-      component: <OperationBrowser list={list} sfList={sfList} />,
+      component: <OperationBrowser />,
     },
     {
       id: "favorites",
@@ -58,7 +58,7 @@ export const HomePage = ({ list, sfList, schema }) => {
       id: "internal",
       content: "Internal",
       panelID: "internal",
-      component: <Internal schema={schema} />,
+      component: <Internal />,
     },
   ];
 
