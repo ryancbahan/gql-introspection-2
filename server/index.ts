@@ -123,9 +123,32 @@ export async function createServer(
     res.status(200).send(JSON.stringify({ data: adminMutationList }));
   });
 
+  app.get(
+    "/admin-api/mutations/:mutation",
+    verifyRequest(app),
+    async (req, res) => {
+      const name = req.params.mutation;
+
+      const mutation = adminMutationList.find(
+        (item) => item.mutationInfo.name === name
+      );
+      res.status(200).send(JSON.stringify({ data: mutation }));
+    }
+  );
+
   app.get("/storefront-api/mutations", verifyRequest(app), async (req, res) => {
     res.status(200).send(JSON.stringify({ data: storefrontMutationList }));
   });
+
+  app.get(
+    "/storefront-api/mutations/:mutation",
+    verifyRequest(app),
+    async (req, res) => {
+      const mutation = req.params.mutation;
+      console.log({ mutation });
+      res.status(200).send(JSON.stringify({ data: storefrontMutationList }));
+    }
+  );
 
   app.get("/themes", verifyRequest(app), async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(

@@ -1,23 +1,35 @@
 import { Card, Layout, Page, IndexTable } from "@shopify/polaris";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { generateArgsMap } from "../../utilities/generateArgsMap";
+import { useAppBridge } from "@shopify/app-bridge-react";
+import { userLoggedInFetch } from "../../utilities/fetch";
+import { Schema } from "../../types";
 
-export const InternalDetailsPage = ({ schema }) => {
-  const { mutation } = useParams();
+export const InternalDetailsPage = () => {
+  const app = useAppBridge();
+  const fetch = userLoggedInFetch(app);
+  const { schema, mutation } = useParams();
 
-  const { mutations: list, argMap } = generateArgsMap(schema);
+  const [mutationData, setMutationData] = useState();
 
-  const mutationNode = list.find((item) => item.name === mutation);
-  const args = argMap[mutation];
+  useEffect(() => {
+    fetch(`/${schema}/mutations/${mutation}`)
+      .then((res) => res?.json())
+      .then((json) => setMutationData(json.data));
+  }, []);
 
-  const headings = ["Title", ...Object.keys(args)].map((i) => ({ title: i }));
+  if (!mutationData) return <div>loading...</div>;
+  // const { mutations: list, argMap } = generateArgsMap(schema);
 
-  console.log({ mutationNode, args });
+  const args = mutationData.mutationInfo.args;
+  const headings = ["Title", ...args.map((i) => ({ title: i.name.value }))];
 
   const rows = [
     [
-      <Link to={`/internal/${mutationNode?.name}/test-credit`}>
+      <Link
+        to={`/internal/${Schema.AdminApi}/${mutationData.mutationInfo.name}/test-credit`}
+      >
         Test credit
       </Link>,
       "$875.00",
@@ -25,7 +37,9 @@ export const InternalDetailsPage = ({ schema }) => {
       "true",
     ],
     [
-      <Link to={`/internal/${mutationNode?.name}/real-credit`}>
+      <Link
+        to={`/internal/${Schema.AdminApi}/${mutationData.mutationInfo.name}/real-credit`}
+      >
         Real credit
       </Link>,
       "$875.00",
@@ -56,9 +70,9 @@ export const InternalDetailsPage = ({ schema }) => {
     >
       <Layout>
         <Layout.Section>
-          <Card title={mutationNode?.name}>
+          <Card title={mutationData.mutationInfo.name}>
             <Card.Section>
-              <p>{mutationNode?.description}</p>
+              <p>{mutationData.mutationInfo?.description.value}</p>
             </Card.Section>
             <Card.Section title="Data sets">
               <IndexTable

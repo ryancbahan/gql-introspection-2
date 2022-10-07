@@ -50,12 +50,12 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/:schema/:mutation" element={<DetailsPage />} />
-                {/* <Route
-                  path="/internal/:mutation"
-                  element={<InternalDetailsPage schema={schema} />}
-                /> */}
                 <Route
-                  path="/internal/:mutation/:dataSetId"
+                  path="/internal/:schema/:mutation"
+                  element={<InternalDetailsPage />}
+                />
+                <Route
+                  path="/internal/:schema/:mutation/:dataSetId"
                   element={<DataSetEditor />}
                 />
               </Routes>

@@ -31,6 +31,8 @@ export const OperationBrowser = () => {
       .then((json) => setStorefrontApiList(json.data));
   }, []);
 
+  console.log({ adminApiList });
+
   const list = selected === Schema.AdminApi ? adminApiList : storefrontApiList;
 
   const options = [

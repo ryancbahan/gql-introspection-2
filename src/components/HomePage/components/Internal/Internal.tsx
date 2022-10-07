@@ -25,6 +25,7 @@ import {
 import { addMocksToSchema, createMockStore } from "@graphql-tools/mock";
 import { generateMutations } from "../../../../utilities/generateMutations";
 import introspectionQuery from "../../../../../graphql.schema.json";
+import { Schema } from "../../../../types";
 
 export const Internal = () => {
   const [paginationIndex, setPaginationIndex] = useState(0);
@@ -39,6 +40,8 @@ export const Internal = () => {
   const store = createMockStore({ schema: validSchema });
   const schemaWithMocks = addMocksToSchema({ schema: validSchema, store });
   const mutationList: any[] = generateMutations(validSchema)!;
+
+  const schema = Schema.AdminApi;
 
   const { mutations: list } = generateArgsMap(validSchema);
 
@@ -104,7 +107,7 @@ export const Internal = () => {
             <p>{item.description}</p>
           </Card.Section>
           <Card.Section>
-            <Link to={`/internal/${item.name}`}>
+            <Link to={`/internal/${schema}/${item.name}`}>
               <Button primary>View details</Button>
             </Link>
           </Card.Section>
