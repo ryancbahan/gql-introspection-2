@@ -5,7 +5,7 @@
     "build": "npm run build:client",
     "build:client": "vite build --outDir dist/client",
     "debug": "node --inspect-brk server/index.js",
-    "dev": "ts-node --esm --transpile-only server/index.ts",
+    "dev": "cross-env NODE_ENV=development nodemon --watch ./server --exec 'ts-node --esm --transpile-only' server/index.ts",
     "prepare": "husky install",
     "preserve": "npm run build",
     "serve": "cross-env NODE_ENV=production node server/index.ts",

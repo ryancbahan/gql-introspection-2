@@ -14,11 +14,13 @@ import {
   print,
   GraphQLSchema,
 } from "graphql";
+import adminApiIntrospection from "../graphql.schema.json" assert { type: "json" };
 
 import fs from "fs";
 
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
+import { IntrospectionQuery } from "graphql";
 
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
@@ -109,8 +111,16 @@ export async function createServer(
 
   app.use(express.json());
 
-  app.get("admin-api/mutations", verifyRequest(app), async (req, res) => {
-    res.status(200).send();
+  app.get("/admin-api/mutations", verifyRequest(app), async (req, res) => {
+    const builtSchema = buildClientSchema(
+      adminApiIntrospection as IntrospectionQuery
+    );
+    const schemaLanguage = printSchema(builtSchema);
+    const source = new Source(schemaLanguage);
+    const validSchema = buildSchema(source, { assumeValidSDL: true });
+
+    console.log({ validSchema });
+    res.status(200).send(JSON.stringify({ foo: validSchema }));
   });
 
   app.get("/themes", verifyRequest(app), async (req, res) => {
