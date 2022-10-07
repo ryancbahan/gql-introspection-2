@@ -5347,7 +5347,7 @@
   "resolved" "https://registry.npmjs.org/ts-log/-/ts-log-2.2.5.tgz"
   "version" "2.2.5"
 
-"ts-node@^10.8.1":
+"ts-node@^10.8.1", "ts-node@^10.9.1":
   "integrity" "sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw=="
   "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-10.9.1.tgz"
   "version" "10.9.1"
