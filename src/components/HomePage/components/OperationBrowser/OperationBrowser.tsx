@@ -9,11 +9,17 @@ import {
   Select,
 } from "@shopify/polaris";
 import { MutationResourceItem } from "../ResourceItem";
+import { useAppBridge } from "@shopify/app-bridge-react";
+import { userLoggedInFetch } from "../../../../utilities/fetch";
 
 export const OperationBrowser = ({ list: adminList, sfList }) => {
+  const app = useAppBridge();
+  const fetch = userLoggedInFetch(app);
   const [queryValue, setQueryValue] = useState("");
   const [paginationIndex, setPaginationIndex] = useState(0);
   const [selected, setSelected] = useState("admin");
+
+  fetch("/admin-api/mutations");
 
   const list = selected === "admin" ? adminList : sfList;
 

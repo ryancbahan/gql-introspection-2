@@ -109,6 +109,10 @@ export async function createServer(
 
   app.use(express.json());
 
+  app.get("admin-api/mutations", verifyRequest(app), async (req, res) => {
+    res.status(200).send();
+  });
+
   app.get("/themes", verifyRequest(app), async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
