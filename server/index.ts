@@ -159,7 +159,11 @@ export async function createServer(
       const data = argsLookup[name] ?? [];
       const item = data.find((item) => item.id === id);
 
-      res.status(200).send(JSON.stringify({ data: item }));
+      const mutation = adminMutationList.find(
+        (mutation) => mutation.mutationInfo.name === name
+      );
+
+      res.status(200).send(JSON.stringify({ data: item, mutation }));
     }
   );
 
