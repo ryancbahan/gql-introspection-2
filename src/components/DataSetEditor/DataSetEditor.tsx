@@ -1,12 +1,27 @@
 import { Page, Layout, Card } from "@shopify/polaris";
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import Editor from "@monaco-editor/react";
 import { Canvas, Edge, ElkRoot } from "reaflow";
+import { useAppBridge } from "@shopify/app-bridge-react";
+import { userLoggedInFetch } from "../../utilities/fetch";
 
 export const DataSetEditor = () => {
+  const app = useAppBridge();
+  const fetch = userLoggedInFetch(app);
+  const { schema, mutation, id } = useParams();
+  const [dataset, setDataset] = useState();
+
+  useEffect(() => {
+    fetch(`/${schema}/mutations/${mutation}/datasets/${id}`)
+      .then((res) => res?.json())
+      .then((json) => setDataset(json.data));
+  }, []);
+
+  console.log({ dataset });
+
   return (
     <Allotment>
       <Allotment.Pane minSize={200}>

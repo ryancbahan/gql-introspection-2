@@ -1,4 +1,5 @@
 export const appCreditCreate1 = {
+  id: "1",
   title: "test credit",
   description: "test app credit description",
   data: {
@@ -12,6 +13,7 @@ export const appCreditCreate1 = {
 };
 
 export const collectionInput1 = {
+  id: "2",
   title: "test collection",
   description: "new collection of products",
   data: {
@@ -23,6 +25,7 @@ export const collectionInput1 = {
 };
 
 export const productInput1 = {
+  id: "3",
   title: "test product",
   description: "my new product for testing",
   data: {

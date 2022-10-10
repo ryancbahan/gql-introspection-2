@@ -149,6 +149,22 @@ export async function createServer(
     }
   );
 
+  app.get(
+    "/admin-api/mutations/:mutation/datasets/:id",
+    verifyRequest(app),
+    async (req, res) => {
+      const name = req.params.mutation;
+      const id = req.params.id;
+
+      const data = argsLookup[name] ?? [];
+      const item = data.find((item) => item.id === id);
+
+      console.log({ data, id, item });
+
+      res.status(200).send(JSON.stringify({ data: item }));
+    }
+  );
+
   app.get("/storefront-api/mutations", verifyRequest(app), async (req, res) => {
     res.status(200).send(JSON.stringify({ data: storefrontMutationList }));
   });

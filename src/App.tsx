@@ -55,7 +55,7 @@ function App() {
                   element={<InternalDetailsPage />}
                 />
                 <Route
-                  path="/internal/:schema/:mutation/:dataSetId"
+                  path="/internal/:schema/:mutation/:id"
                   element={<DataSetEditor />}
                 />
               </Routes>
