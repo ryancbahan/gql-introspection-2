@@ -19,133 +19,133 @@ import { gql, useMutation } from "@apollo/client";
 export const DetailsPage = () => {
   const { schema, mutation } = useParams();
   console.log({ schema, mutation });
-  // const [collapsibleOpen, setCollapsibleOpen] = useState(false);
-  // const [checked, setChecked] = useState(false);
+  const [collapsibleOpen, setCollapsibleOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
 
-  // const opsRef = useRef(null);
-  // const varsRef = useRef(null);
-  // const resultsRef = useRef(null);
+  const opsRef = useRef(null);
+  const varsRef = useRef(null);
+  const resultsRef = useRef(null);
 
-  // const { mutationInfo, mutationDocument, variableValues } = list.find(
-  //   (item) => item.mutationInfo.name === mutation
-  // );
+  const { mutationInfo, mutationDocument, variableValues } = list.find(
+    (item) => item.mutationInfo.name === mutation
+  );
 
-  // const defaultOperations = print(mutationDocument);
+  const defaultOperations = print(mutationDocument);
 
-  // const defaultVariables = JSON.stringify(variableValues);
+  const defaultVariables = JSON.stringify(variableValues);
 
-  // const createEditor = (
-  //   ref: React.MutableRefObject<null>,
-  //   options: editor.IStandaloneEditorConstructionOptions
-  // ) => editor.create(ref.current as unknown as HTMLElement, options);
+  const createEditor = (
+    ref: React.MutableRefObject<null>,
+    options: editor.IStandaloneEditorConstructionOptions
+  ) => editor.create(ref.current as unknown as HTMLElement, options);
 
-  // const getOrCreateModel = (uri: string, value: string) => {
-  //   return (
-  //     editor.getModel(Uri.file(uri)) ??
-  //     editor.createModel(value, uri.split(".").pop(), Uri.file(uri))
-  //   );
-  // };
+  const getOrCreateModel = (uri: string, value: string) => {
+    return (
+      editor.getModel(Uri.file(uri)) ??
+      editor.createModel(value, uri.split(".").pop(), Uri.file(uri))
+    );
+  };
 
-  // const queryModel = getOrCreateModel(
-  //   `${mutationInfo.name}.graphql`,
-  //   defaultOperations
-  // );
-  // const variablesModel = getOrCreateModel(
-  //   `${mutationInfo.name}-variables.json`,
-  //   defaultVariables
-  // );
-  // const resultsModel = getOrCreateModel(
-  //   `${mutationInfo.name}-results.json`,
-  //   "{}"
-  // );
+  const queryModel = getOrCreateModel(
+    `${mutationInfo.name}.graphql`,
+    defaultOperations
+  );
+  const variablesModel = getOrCreateModel(
+    `${mutationInfo.name}-variables.json`,
+    defaultVariables
+  );
+  const resultsModel = getOrCreateModel(
+    `${mutationInfo.name}-results.json`,
+    "{}"
+  );
 
-  // useEffect(() => {
-  //   initializeMode({
-  //     // diagnosticSettings: {
-  //     //     validateVariablesJSON: {
-  //     //         [Uri.file('operation.graphql').toString()]: [
-  //     //             Uri.file('variables.json').toString(),
-  //     //         ],
-  //     //     },
-  //     //     jsonDiagnosticSettings: {
-  //     //         validate: true,
-  //     //         schemaValidation: 'error',
-  //     //         // set these again, because we are entirely re-setting them here
-  //     //         allowComments: true,
-  //     //         trailingCommas: 'ignore',
-  //     //     },
-  //     // },
-  //     schemas: [
-  //       {
-  //         introspectionJSON: schema,
-  //         uri: "myschema.graphql",
-  //       },
-  //     ],
-  //   });
+  useEffect(() => {
+    initializeMode({
+      // diagnosticSettings: {
+      //     validateVariablesJSON: {
+      //         [Uri.file('operation.graphql').toString()]: [
+      //             Uri.file('variables.json').toString(),
+      //         ],
+      //     },
+      //     jsonDiagnosticSettings: {
+      //         validate: true,
+      //         schemaValidation: 'error',
+      //         // set these again, because we are entirely re-setting them here
+      //         allowComments: true,
+      //         trailingCommas: 'ignore',
+      //     },
+      // },
+      schemas: [
+        {
+          introspectionJSON: schema,
+          uri: "myschema.graphql",
+        },
+      ],
+    });
 
-  //   createEditor(opsRef, {
-  //     theme: "vs-dark",
-  //     model: queryModel,
-  //     language: "graphql",
-  //     automaticLayout: true,
-  //   });
+    createEditor(opsRef, {
+      theme: "vs-dark",
+      model: queryModel,
+      language: "graphql",
+      automaticLayout: true,
+    });
 
-  //   createEditor(varsRef, {
-  //     theme: "vs-dark",
-  //     model: variablesModel,
-  //     automaticLayout: true,
-  //   });
+    createEditor(varsRef, {
+      theme: "vs-dark",
+      model: variablesModel,
+      automaticLayout: true,
+    });
 
-  //   createEditor(resultsRef, {
-  //     theme: "vs-dark",
-  //     model: resultsModel,
-  //     readOnly: true,
-  //     smoothScrolling: true,
-  //     automaticLayout: true,
-  //   });
-  // }, []);
+    createEditor(resultsRef, {
+      theme: "vs-dark",
+      model: resultsModel,
+      readOnly: true,
+      smoothScrolling: true,
+      automaticLayout: true,
+    });
+  }, []);
 
-  // function renderArg(arg: any) {
-  //   const { name, description } = arg;
+  function renderArg(arg: any) {
+    const { name, description } = arg;
 
-  //   return (
-  //     <span key={Math.random()}>
-  //       <Stack.Item>
-  //         <TextContainer>
-  //           <p>
-  //             <b>{name?.value}</b>: {description?.value}
-  //           </p>
-  //         </TextContainer>
-  //       </Stack.Item>
-  //     </span>
-  //   );
-  // }
+    return (
+      <span key={Math.random()}>
+        <Stack.Item>
+          <TextContainer>
+            <p>
+              <b>{name?.value}</b>: {description?.value}
+            </p>
+          </TextContainer>
+        </Stack.Item>
+      </span>
+    );
+  }
 
-  // const [mutate] = useMutation(gql(queryModel.getValue()));
+  const [mutate] = useMutation(gql(queryModel.getValue()));
 
-  // const onButtonClick = () => {
-  //   const query = queryModel.getValue();
-  //   const vars = variablesModel.getValue();
+  const onButtonClick = () => {
+    const query = queryModel.getValue();
+    const vars = variablesModel.getValue();
 
-  //   if (checked) {
-  //     graphql({
-  //       schema: mockSchema,
-  //       source: query,
-  //       variableValues,
-  //     }).then((result) => {
-  //       resultsModel?.setValue(JSON.stringify(result, null, 2));
-  //     });
-  //   } else {
-  //     mutate(variableValues).then((res) => console.log({ res }));
-  //   }
-  // };
+    if (checked) {
+      graphql({
+        schema: mockSchema,
+        source: query,
+        variableValues,
+      }).then((result) => {
+        resultsModel?.setValue(JSON.stringify(result, null, 2));
+      });
+    } else {
+      mutate(variableValues).then((res) => console.log({ res }));
+    }
+  };
 
   return (
     <Page
       breadcrumbs={[{ content: "Back", onAction: () => window.history.back() }]}
       fullWidth
     >
-      {/* <Layout>
+      <Layout>
         <Layout.Section>
           <Card title={mutationInfo.name} sectioned>
             <Card.Section>
@@ -187,7 +187,7 @@ export const DetailsPage = () => {
             </Card.Section>
           </Card>
         </Layout.Section>
-      </Layout> */}
+      </Layout>
     </Page>
   );
 };

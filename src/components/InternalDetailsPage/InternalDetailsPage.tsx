@@ -12,54 +12,35 @@ export const InternalDetailsPage = () => {
   const { schema, mutation } = useParams();
 
   const [mutationData, setMutationData] = useState();
+  const [datasets, setDatasets] = useState();
 
   useEffect(() => {
     fetch(`/${schema}/mutations/${mutation}`)
       .then((res) => res?.json())
       .then((json) => setMutationData(json.data));
+
+    fetch(`/${schema}/mutations/${mutation}/datasets`)
+      .then((res) => res?.json())
+      .then((json) => setDatasets(json.data));
   }, []);
 
   if (!mutationData) return <div>loading...</div>;
   // const { mutations: list, argMap } = generateArgsMap(schema);
 
-  const args = mutationData.mutationInfo.args;
-  const headings = ["Title", ...args.map((i) => ({ title: i.name.value }))];
+  const headings = [{ title: "Title" }, { title: "Description" }];
 
-  const rows = [
-    [
-      <Link
-        to={`/internal/${Schema.AdminApi}/${mutationData.mutationInfo.name}/test-credit`}
-      >
-        Test credit
-      </Link>,
-      "$875.00",
-      "custom description",
-      "true",
-    ],
-    [
-      <Link
-        to={`/internal/${Schema.AdminApi}/${mutationData.mutationInfo.name}/real-credit`}
-      >
-        Real credit
-      </Link>,
-      "$875.00",
-      "custom description",
-      "false",
-    ],
-  ];
-
-  const columnContentTypes = headings.map((item) => "text");
-
-  const rowMarkup = rows.map((item, index) => (
-    <IndexTable.Row
-      id={index.toString()}
-      key={index}
-      selected={false}
-      position={index}
-    >
-      {item.map((i) => (
-        <IndexTable.Cell key={i.toString()}>{i}</IndexTable.Cell>
-      ))}
+  const rowMarkup = datasets?.map(({ id, title, description }, index) => (
+    <IndexTable.Row id={id} key={id} selected={false} position={index}>
+      <IndexTable.Cell key={Math.random().toString()}>
+        <Link
+          to={`/internal/${Schema.AdminApi}/${mutationData.mutationInfo.name}/${id}`}
+        >
+          {title}
+        </Link>
+      </IndexTable.Cell>
+      <IndexTable.Cell key={Math.random().toString()}>
+        {description}
+      </IndexTable.Cell>
     </IndexTable.Row>
   ));
 
@@ -77,7 +58,7 @@ export const InternalDetailsPage = () => {
             <Card.Section title="Data sets">
               <IndexTable
                 headings={headings}
-                itemCount={rows.length}
+                itemCount={datasets?.length ?? 0}
                 resourceName={{
                   singular: "Data set",
                   plural: "Data sets",

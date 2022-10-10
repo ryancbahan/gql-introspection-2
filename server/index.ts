@@ -15,6 +15,7 @@ import {
 } from "graphql";
 import adminApiIntrospection from "../graphql.schema.json" assert { type: "json" };
 import storefrontApiIntrospection from "../storefront-graphql.schema.json" assert { type: "json" };
+import { argsLookup } from "./sampleArgs.ts";
 
 import fs from "fs";
 import { generateMutationsFromSchema } from "./generateMutationsFromSchema.ts";
@@ -133,6 +134,18 @@ export async function createServer(
         (item) => item.mutationInfo.name === name
       );
       res.status(200).send(JSON.stringify({ data: mutation }));
+    }
+  );
+
+  app.get(
+    "/admin-api/mutations/:mutation/datasets",
+    verifyRequest(app),
+    async (req, res) => {
+      const name = req.params.mutation;
+
+      const data = argsLookup[name] ?? [];
+
+      res.status(200).send(JSON.stringify({ data }));
     }
   );
 
