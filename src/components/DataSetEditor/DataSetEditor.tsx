@@ -31,7 +31,9 @@ export const DataSetEditor = () => {
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
-    editor.getAction("editor.action.formatDocument").run();
+    // setTimeout(function() {
+    //   editor.getAction('editor.action.formatDocument').run();
+    // }, 300);
   }
 
   const getFormattedData = () => {
@@ -74,7 +76,7 @@ export const DataSetEditor = () => {
 
   const { nodes, edges } = getFormattedData();
 
-  const initialEditorValue = JSON.stringify(dataset.data);
+  const initialEditorValue = JSON.stringify(dataset.data, null, 2);
 
   return (
     <>
