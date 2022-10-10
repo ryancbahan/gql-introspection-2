@@ -1,5 +1,5 @@
 import { Page, Layout, Card } from "@shopify/polaris";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
@@ -13,6 +13,7 @@ export const DataSetEditor = () => {
   const fetch = userLoggedInFetch(app);
   const { schema, mutation, id } = useParams();
   const [dataset, setDataset] = useState();
+  const editorRef = useRef(null);
 
   useEffect(() => {
     fetch(`/${schema}/mutations/${mutation}/datasets/${id}`)
@@ -20,32 +21,61 @@ export const DataSetEditor = () => {
       .then((json) => setDataset(json.data));
   }, []);
 
-  console.log({ dataset });
+  if (!dataset) return <div>loading...</div>;
+
+  function handleEditorDidMount(editor, monaco) {
+    editorRef.current = editor;
+    editor.getAction("editor.action.formatDocument").run();
+  }
+
+  console.log(dataset?.data);
+
+  // [
+  //   {
+  //     id: "1",
+  //     text: "1",
+  //   },
+  //   {
+  //     id: "2",
+  //     text: "2",
+  //   },
+  // ]
+
+  const formattedData = Object.keys(dataset.data).map((item) => ({
+    id: Math.random().toString(),
+    text: item,
+  }));
+  const initialEditorValue = JSON.stringify(dataset.data);
+  console.log({ initialEditorValue });
 
   return (
     <Allotment>
       <Allotment.Pane minSize={200}>
-        <Editor defaultLanguage="graphql" defaultValue="// some comment" />
+        <Editor
+          defaultLanguage="json"
+          defaultValue={initialEditorValue}
+          onMount={handleEditorDidMount}
+          options={{
+            overviewRulerLanes: 0,
+            hideCursorInOverviewRuler: true,
+            scrollbar: {
+              vertical: "hidden",
+            },
+            minimap: { enabled: false },
+            overviewRulerBorder: false,
+          }}
+        />
       </Allotment.Pane>
       <Allotment.Pane snap>
         <Canvas
-          nodes={[
-            {
-              id: "1",
-              text: "1",
-            },
-            {
-              id: "2",
-              text: "2",
-            },
-          ]}
-          edges={[
-            {
-              id: "1-2",
-              from: "1",
-              to: "2",
-            },
-          ]}
+          nodes={formattedData}
+          // edges={[
+          //   {
+          //     id: "1-2",
+          //     from: "1",
+          //     to: "2",
+          //   },
+          // ]}
         />
       </Allotment.Pane>
     </Allotment>

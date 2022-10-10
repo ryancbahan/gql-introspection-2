@@ -159,8 +159,6 @@ export async function createServer(
       const data = argsLookup[name] ?? [];
       const item = data.find((item) => item.id === id);
 
-      console.log({ data, id, item });
-
       res.status(200).send(JSON.stringify({ data: item }));
     }
   );
