@@ -16,6 +16,7 @@ import {
 import adminApiIntrospection from "../graphql.schema.json" assert { type: "json" };
 import storefrontApiIntrospection from "../storefront-graphql.schema.json" assert { type: "json" };
 import { argsLookup } from "./sampleArgs.ts";
+import { generateSchema } from "./generateSchema.ts";
 
 import fs from "fs";
 import { generateMutationsFromSchema } from "./generateMutationsFromSchema.ts";
@@ -155,6 +156,9 @@ export async function createServer(
     async (req, res) => {
       const name = req.params.mutation;
       const id = req.params.id;
+      const mutationData = generateSchema(adminApiIntrospection)
+        ?.getMutationType()
+        ?.astNode.fields.find((item) => item.name.value === name);
 
       const data = argsLookup[name] ?? [];
       const item = data.find((item) => item.id === id);
@@ -163,7 +167,9 @@ export async function createServer(
         (mutation) => mutation.mutationInfo.name === name
       );
 
-      res.status(200).send(JSON.stringify({ data: item, mutation }));
+      res
+        .status(200)
+        .send(JSON.stringify({ data: item, mutation, mutationData }));
     }
   );
 
