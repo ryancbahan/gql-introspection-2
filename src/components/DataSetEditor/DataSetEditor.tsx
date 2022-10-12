@@ -50,34 +50,36 @@ export const DataSetEditor = () => {
 
   const [dataset, setDataset] = useState();
   const [mutationData, setMutationData] = useState();
+  const [selectedNode, setSelectedNode] = useState();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalParent, setModalParent] = useState();
-  const [modalData, setModalData] = useState();
-  const [modalSelections, setModalSelections] = useState([]);
+  // const [modalOpen, setModalOpen] = useState(false);
+  // const [modalParent, setModalParent] = useState();
+  // const [modalData, setModalData] = useState();
+  // const [modalSelections, setModalSelections] = useState([]);
 
-  const [nodeSelection, setNodeSelection] = useState([]);
-  const [edgeSelection, setEdgeSelection] = useState([]);
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
 
   const editorRef = useRef(null);
-
   const validSchema = generateSchema(adminApiIntrospection);
 
   useEffect(() => {
     fetch(`/${schema}/mutations/${mutation}/datasets/${id}`)
       .then((res) => res?.json())
       .then((json) => {
+        const mutationTree = formatMutation(json.mutationData, validSchema);
+        const { nodes: nodeData, edges: edgeData } =
+          getNodesAndEdges(mutationTree);
+
         setDataset(json.data);
-        setMutationData(json.mutationData);
+        setMutationData(mutationTree);
+        setNodes(nodeData);
+        setEdges(edgeData);
+        setSelectedNode(nodeData[0]);
       });
   }, []);
 
   if (!dataset || !mutationData) return <div>loading...</div>;
-
-  const mutationTree = formatMutation(mutationData, validSchema);
-  const { nodes, edges } = getNodesAndEdges(mutationTree);
-
-  console.log({ nodes, edges });
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
@@ -91,27 +93,29 @@ export const DataSetEditor = () => {
 
   // const initialEditorValue = JSON.stringify(dataset.data, null, 2);
 
-  // const handleNodeClick = (_, node) => {
-  //   setModalOpen(true)
+  const handleNodeClick = (_, node) => {
+    setSelectedNode(node);
+    console.log({ node });
+    // setModalOpen(true)
 
-  //   if (node.data.arguments) {
-  //     const options = []
+    // if (node.data.arguments) {
+    //   const options = []
 
-  //     node.data.arguments.forEach(arg => options.push(arg))
+    //   node.data.arguments.forEach(arg => options.push(arg))
 
-  //     setModalData(options)
-  //     setModalParent(node.data)
-  //   } else {
-  //     const typeName = getTypeName(node.data.type)
-  //     const fieldTyping = validSchema.getType(typeName)
+    //   setModalData(options)
+    //   setModalParent(node.data)
+    // } else {
+    //   const typeName = getTypeName(node.data.type)
+    //   const fieldTyping = validSchema.getType(typeName)
 
-  //     if (fieldTyping.getFields) {
-  //       const fields = Object.values(fieldTyping.getFields()).map(f => f.astNode)
-  //       setModalData(fields)
-  //       setModalParent(node.data)
-  //     }
-  //   }
-  // }
+    //   if (fieldTyping.getFields) {
+    //     const fields = Object.values(fieldTyping.getFields()).map(f => f.astNode)
+    //     setModalData(fields)
+    //     setModalParent(node.data)
+    //   }
+    // }
+  };
 
   // const setChecked = (option) => {
   //   const hasOption = modalSelections.find(s => {
@@ -155,8 +159,12 @@ export const DataSetEditor = () => {
     <>
       <Allotment>
         <Allotment.Pane minSize={200}>
-          <Card>
-            <Card.Section>foo</Card.Section>
+          <Card title={selectedNode?.name.value}>
+            <Card.Section>
+              <TextContainer>
+                <p>{selectedNode?.description?.value}</p>
+              </TextContainer>
+            </Card.Section>
           </Card>
           {/* <Editor
             defaultLanguage="json"
@@ -175,7 +183,7 @@ export const DataSetEditor = () => {
         </Allotment.Pane>
         <Allotment.Pane snap>
           <Canvas
-            // node={<Node selectable onClick={handleNodeClick} />}
+            node={<Node selectable onClick={handleNodeClick} />}
             nodes={nodes}
             edges={edges}
           />

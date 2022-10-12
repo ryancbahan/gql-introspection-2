@@ -5,7 +5,6 @@ export function getNodesAndEdges(node, parentNode) {
   const edges = [];
 
   nodes.push(node);
-  console.log({ node });
 
   if (parentNode) {
     edges.push({
@@ -15,7 +14,7 @@ export function getNodesAndEdges(node, parentNode) {
     });
   }
 
-  if (node.children?.length) {
+  if (node?.children?.length) {
     node.children.forEach((child) => {
       const { nodes: nextNodes, edges: nextEdges } = getNodesAndEdges(
         child,
