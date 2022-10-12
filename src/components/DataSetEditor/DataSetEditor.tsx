@@ -24,6 +24,7 @@ import adminApiIntrospection from "../../../graphql.schema.json";
 import { getTypeName } from "../../utilities/generateMutations";
 import { formatMutation } from "./formatMutation";
 import { getNodesAndEdges } from "./getNodesAndEdges";
+import { Kind } from "graphql";
 
 const OptionRow = ({ option, checked, handleChange }) => {
   const handleClick = () => {
@@ -172,11 +173,16 @@ export const DataSetEditor = () => {
                 <Card.Section title="Fields">
                   <Stack vertical>
                     {selectedNode?.children?.map((child) => (
-                      <TextContainer>
+                      <Stack>
                         <p>
-                          <b>{child.name.value}</b>: {child.description.value}
+                          <b>{child.name.value}&nbsp;</b>
+                          {child.type.kind === Kind.NON_NULL_TYPE && (
+                            <Badge>Required</Badge>
+                          )}
+                          : &nbsp;
+                          {child.description.value}
                         </p>
-                      </TextContainer>
+                      </Stack>
                     ))}
                   </Stack>
                 </Card.Section>
@@ -237,6 +243,7 @@ export const DataSetEditor = () => {
             node={<Node selectable onClick={handleNodeClick} />}
             nodes={nodes}
             edges={edges}
+            maxWidth={4000}
           />
           {/* <Modal
             title="Add data"
