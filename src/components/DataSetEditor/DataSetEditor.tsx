@@ -51,6 +51,7 @@ export const DataSetEditor = () => {
   const [dataset, setDataset] = useState();
   const [mutationData, setMutationData] = useState();
   const [selectedNode, setSelectedNode] = useState();
+  const [zoom, setZoom] = useState<number>(0.7);
 
   // const [modalOpen, setModalOpen] = useState(false);
   // const [modalParent, setModalParent] = useState();
@@ -61,6 +62,7 @@ export const DataSetEditor = () => {
   const [edges, setEdges] = useState([]);
 
   const editorRef = useRef(null);
+  const ref = useRef(null);
   const validSchema = generateSchema(adminApiIntrospection);
 
   useEffect(() => {
@@ -159,14 +161,28 @@ export const DataSetEditor = () => {
     <>
       <Allotment>
         <Allotment.Pane minSize={200}>
-          <Card title={selectedNode?.name.value}>
-            <Card.Section>
-              <TextContainer>
-                <p>{selectedNode?.description?.value}</p>
-              </TextContainer>
-            </Card.Section>
-          </Card>
-          {/* <Editor
+          <div style={{ width: "100%", height: "100%", overflow: "auto" }}>
+            <Card title={selectedNode?.name.value}>
+              <Card.Section>
+                <TextContainer>
+                  <p>{selectedNode?.description?.value}</p>
+                </TextContainer>
+              </Card.Section>
+              {selectedNode?.children?.length ? (
+                <Card.Section title="Fields">
+                  <Stack vertical>
+                    {selectedNode?.children?.map((child) => (
+                      <TextContainer>
+                        <p>
+                          <b>{child.name.value}</b>: {child.description.value}
+                        </p>
+                      </TextContainer>
+                    ))}
+                  </Stack>
+                </Card.Section>
+              ) : null}
+            </Card>
+            {/* <Editor
             defaultLanguage="json"
             defaultValue={initialEditorValue}
             onMount={handleEditorDidMount}
@@ -180,9 +196,44 @@ export const DataSetEditor = () => {
               overviewRulerBorder: false,
             }}
           /> */}
+          </div>
         </Allotment.Pane>
         <Allotment.Pane snap>
+          <pre
+            style={{
+              zIndex: 9,
+              position: "absolute",
+              top: 5,
+              right: 15,
+              background: "rgba(0, 0, 0, .5)",
+              padding: 20,
+              color: "white",
+            }}
+          >
+            Zoom: {zoom}
+            <br />
+            <button
+              style={{ display: "block", width: "100%", margin: "5px 0" }}
+              onClick={() => ref?.current?.zoomIn()}
+            >
+              Zoom In
+            </button>
+            <button
+              style={{ display: "block", width: "100%", margin: "5px 0" }}
+              onClick={() => ref?.current?.zoomOut()}
+            >
+              Zoom Out
+            </button>
+            <button
+              style={{ display: "block", width: "100%" }}
+              onClick={() => ref?.current?.fitCanvas()}
+            >
+              Fit
+            </button>
+          </pre>
           <Canvas
+            ref={ref}
+            zoom={zoom}
             node={<Node selectable onClick={handleNodeClick} />}
             nodes={nodes}
             edges={edges}
