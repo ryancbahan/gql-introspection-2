@@ -1,12 +1,14 @@
 import React from "react";
-import { Card, TextContainer, Stack, Badge, Checkbox } from "@shopify/polaris";
-import { Kind } from "graphql";
+import { Card, TextContainer, Stack } from "@shopify/polaris";
+import { FieldChildrenRow } from "./FieldChildrenRow";
+import { FieldInfo } from "./FieldInfo";
 
 export function NodeEditorPanel({
   selectedNode,
   setSelectedNode,
   nodeLookup,
   setNodeLookup,
+  schema,
 }) {
   const children = Object.values(nodeLookup).filter(
     (node) => node?.parentId === selectedNode.id
@@ -15,31 +17,24 @@ export function NodeEditorPanel({
     <div style={{ width: "100%", height: "100%", overflow: "auto" }}>
       <Card title={selectedNode.name.value}>
         <Card.Section>
-          <TextContainer>
-            <p>{selectedNode.description?.value}</p>
-          </TextContainer>
+          <FieldInfo
+            schema={schema}
+            field={selectedNode}
+            nodeLookup={nodeLookup}
+            setNodeLookup={setNodeLookup}
+          />
         </Card.Section>
         {children?.length ? (
           <Card.Section title="Fields">
             <Stack vertical>
               {children?.map((child) => (
                 <div key={child.id}>
-                  <Stack alignment="center">
-                    <Checkbox
-                      label={child.name.value}
-                      checked={child.active}
-                      onChange={() => {
-                        const nextChild = { ...child, active: !child.active };
-                        setNodeLookup({
-                          ...nodeLookup,
-                          [nextChild.id]: nextChild,
-                        });
-                      }}
-                    />
-                    {child.type.kind === Kind.NON_NULL_TYPE && (
-                      <Badge>Required</Badge>
-                    )}
-                  </Stack>
+                  <FieldChildrenRow
+                    setSelectedNode={setSelectedNode}
+                    field={child}
+                    nodeLookup={nodeLookup}
+                    setNodeLookup={setNodeLookup}
+                  />
                 </div>
               ))}
             </Stack>

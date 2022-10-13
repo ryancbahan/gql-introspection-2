@@ -32,7 +32,7 @@ export function formatMutation(mutation, schema: GraphQLSchema) {
       kind: argument.kind,
       value: null,
       text: argument.name.value,
-      active: false,
+      active: argument.type.kind === Kind.NON_NULL_TYPE,
       parentId: formattedMutation.id,
     };
 
@@ -65,7 +65,7 @@ const iterateThroughNodes = (schema, node, parentNode, nodeLookup) => {
         kind: field.kind,
         value: null,
         text: field.name.value,
-        active: false,
+        active: field.type.kind === Kind.NON_NULL_TYPE,
         parentId: parentNode.id,
       };
 

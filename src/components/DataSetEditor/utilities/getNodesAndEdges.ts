@@ -23,16 +23,5 @@ export function getNodesAndEdges(nodeLookup) {
 
   const nodes = initialNodes.filter((node) => node.active === true);
 
-  // if (node?.children?.length) {
-  //   node.children.forEach((child) => {
-  //     const { nodes: nextNodes, edges: nextEdges } = getNodesAndEdges(
-  //       child,
-  //       node
-  //     );
-  //     nodes.push(...nextNodes);
-  //     edges.push(...nextEdges);
-  //   });
-  // }
-
   return { nodes, edges };
 }

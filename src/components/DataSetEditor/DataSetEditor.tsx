@@ -36,6 +36,13 @@ export const DataSetEditor = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (selectedNode && nodeLookup) {
+      const updatedNode = nodeLookup[selectedNode.id];
+      setSelectedNode(updatedNode);
+    }
+  }, [nodeLookup]);
+
   if (!dataset || !nodeLookup) return <div>loading...</div>;
 
   const { nodes, edges } = getNodesAndEdges(nodeLookup);
@@ -52,6 +59,7 @@ export const DataSetEditor = () => {
         <Allotment.Pane minSize={200}>
           {selectedNode ? (
             <NodeEditorPanel
+              schema={validSchema}
               setNodeLookup={setNodeLookup}
               nodeLookup={nodeLookup}
               selectedNode={selectedNode}
