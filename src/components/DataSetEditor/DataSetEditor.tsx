@@ -1,48 +1,16 @@
-import {
-  Page,
-  Layout,
-  Card,
-  Button,
-  Modal,
-  Stack,
-  TextField,
-  Badge,
-} from "@shopify/polaris";
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
-import Editor from "@monaco-editor/react";
 import { Canvas, Edge, ElkRoot, Node, Port, PortProps } from "reaflow";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { userLoggedInFetch } from "../../utilities/fetch";
-import { Heading } from "@shopify/polaris";
-import { TextContainer } from "@shopify/polaris";
-import { Checkbox } from "@shopify/polaris";
 import { generateSchema } from "../../../server/generateSchema";
 import adminApiIntrospection from "../../../graphql.schema.json";
-import { getTypeName } from "../../utilities/generateMutations";
-import { formatMutation } from "./formatMutation";
-import { getNodesAndEdges } from "./getNodesAndEdges";
-import { Kind } from "graphql";
-
-const OptionRow = ({ option, checked, handleChange }) => {
-  const handleClick = () => {
-    handleChange(option);
-  };
-
-  return (
-    <Stack alignment="center">
-      <Checkbox
-        checked={checked}
-        onChange={handleClick}
-        label={option.name.value}
-      />
-      {option.type.kind === "NonNullType" && <Badge>Required</Badge>}
-      {checked && <TextField value={option.name.value} />}
-    </Stack>
-  );
-};
+import { formatMutation, Internal } from "./utilities/formatMutation";
+import { getNodesAndEdges } from "./utilities/getNodesAndEdges";
+import { NodeEditorPanel } from "./components/NodeEditorPanel";
+import { from } from "@apollo/client";
 
 export const DataSetEditor = () => {
   const app = useAppBridge();
@@ -50,19 +18,10 @@ export const DataSetEditor = () => {
   const { schema, mutation, id } = useParams();
 
   const [dataset, setDataset] = useState();
-  const [mutationData, setMutationData] = useState();
+  const [nodeLookup, setNodeLookup] = useState();
   const [selectedNode, setSelectedNode] = useState();
   const [zoom, setZoom] = useState<number>(0.7);
 
-  // const [modalOpen, setModalOpen] = useState(false);
-  // const [modalParent, setModalParent] = useState();
-  // const [modalData, setModalData] = useState();
-  // const [modalSelections, setModalSelections] = useState([]);
-
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
-
-  const editorRef = useRef(null);
   const ref = useRef(null);
   const validSchema = generateSchema(adminApiIntrospection);
 
@@ -70,139 +29,35 @@ export const DataSetEditor = () => {
     fetch(`/${schema}/mutations/${mutation}/datasets/${id}`)
       .then((res) => res?.json())
       .then((json) => {
-        const mutationTree = formatMutation(json.mutationData, validSchema);
-        const { nodes: nodeData, edges: edgeData } =
-          getNodesAndEdges(mutationTree);
+        const { nodeLookup } = formatMutation(json.mutationData, validSchema);
 
         setDataset(json.data);
-        setMutationData(mutationTree);
-        setNodes(nodeData);
-        setEdges(edgeData);
-        setSelectedNode(nodeData[0]);
+        setNodeLookup(nodeLookup);
       });
   }, []);
 
-  if (!dataset || !mutationData) return <div>loading...</div>;
+  if (!dataset || !nodeLookup) return <div>loading...</div>;
 
-  function handleEditorDidMount(editor, monaco) {
-    editorRef.current = editor;
-  }
+  const { nodes, edges } = getNodesAndEdges(nodeLookup);
 
-  // const { node } = formatToNode(mutationData);
-
-  // if (!nodeSelection.length) {
-  //   setNodeSelection([node])
-  // }
-
-  // const initialEditorValue = JSON.stringify(dataset.data, null, 2);
+  if (!selectedNode) setSelectedNode(nodes[0]);
 
   const handleNodeClick = (_, node) => {
     setSelectedNode(node);
-    console.log({ node });
-    // setModalOpen(true)
-
-    // if (node.data.arguments) {
-    //   const options = []
-
-    //   node.data.arguments.forEach(arg => options.push(arg))
-
-    //   setModalData(options)
-    //   setModalParent(node.data)
-    // } else {
-    //   const typeName = getTypeName(node.data.type)
-    //   const fieldTyping = validSchema.getType(typeName)
-
-    //   if (fieldTyping.getFields) {
-    //     const fields = Object.values(fieldTyping.getFields()).map(f => f.astNode)
-    //     setModalData(fields)
-    //     setModalParent(node.data)
-    //   }
-    // }
   };
-
-  // const setChecked = (option) => {
-  //   const hasOption = modalSelections.find(s => {
-  //     if (option.loc.start, s.loc.start === option.loc.start) return s
-  //   })
-
-  //   return Boolean(hasOption)
-  // }
-
-  // const handleCheckboxUpdate = (option) => {
-  //   if (modalSelections?.find(selection => selection.loc.start === option.loc.start)) {
-  //     setModalSelections(modalSelections.filter(selection => selection.loc.start !== option.loc.start))
-  //   } else {
-  //     setModalSelections([...modalSelections, option])
-  //   }
-  // }
-
-  // const onModalClose = () => {
-  //   setModalData(undefined)
-  //   setModalOpen(false)
-  //   setModalParent(undefined)
-  //   setModalSelections([])
-  // }
-
-  // const handleModalConfirm = () => {
-  //   const nextSelections = []
-  //   const nextEdges = []
-
-  //   modalSelections?.forEach(selection => {
-  //     const { node, edge } = formatToNode(selection, modalParent)
-  //     nextSelections.push(node)
-  //     nextEdges.push(edge)
-  //   })
-
-  //   setNodeSelection([...nodeSelection, ...nextSelections])
-  //   setEdgeSelection([...edgeSelection, ...nextEdges])
-  //   onModalClose()
-  // }
 
   return (
     <>
       <Allotment>
         <Allotment.Pane minSize={200}>
-          <div style={{ width: "100%", height: "100%", overflow: "auto" }}>
-            <Card title={selectedNode?.name.value}>
-              <Card.Section>
-                <TextContainer>
-                  <p>{selectedNode?.description?.value}</p>
-                </TextContainer>
-              </Card.Section>
-              {selectedNode?.children?.length ? (
-                <Card.Section title="Fields">
-                  <Stack vertical>
-                    {selectedNode?.children?.map((child) => (
-                      <Stack>
-                        <p>
-                          <b>{child.name.value}&nbsp;</b>
-                          {child.type.kind === Kind.NON_NULL_TYPE && (
-                            <Badge>Required</Badge>
-                          )}
-                          : &nbsp;
-                          {child.description.value}
-                        </p>
-                      </Stack>
-                    ))}
-                  </Stack>
-                </Card.Section>
-              ) : null}
-            </Card>
-            {/* <Editor
-            defaultLanguage="json"
-            defaultValue={initialEditorValue}
-            onMount={handleEditorDidMount}
-            options={{
-              overviewRulerLanes: 0,
-              hideCursorInOverviewRuler: true,
-              scrollbar: {
-                vertical: "hidden",
-              },
-              minimap: { enabled: false },
-              overviewRulerBorder: false,
-            }}
-          /> */}
-          </div>
+          {selectedNode ? (
+            <NodeEditorPanel
+              setNodeLookup={setNodeLookup}
+              nodeLookup={nodeLookup}
+              selectedNode={selectedNode}
+              setSelectedNode={setSelectedNode}
+            />
+          ) : null}
         </Allotment.Pane>
         <Allotment.Pane snap>
           <pre
@@ -245,34 +100,6 @@ export const DataSetEditor = () => {
             edges={edges}
             maxWidth={4000}
           />
-          {/* <Modal
-            title="Add data"
-            onClose={onModalClose}
-            primaryAction={{
-              content: 'Confirm',
-              onAction: handleModalConfirm,
-            }}
-            secondaryActions={[
-              {
-                content: 'Close',
-                onAction: onModalClose,
-              },
-            ]}
-            open={modalOpen}>
-            <Modal.Section>
-              <TextContainer>
-                <Heading>Add options</Heading>
-                {modalData?.map(option => (
-                  <div key={Math.random()}>
-                    <OptionRow
-                      checked={setChecked(option)}
-                      handleChange={handleCheckboxUpdate}
-                      option={option} />
-                  </div>
-                ))}
-              </TextContainer>
-            </Modal.Section>
-          </Modal> */}
         </Allotment.Pane>
       </Allotment>
     </>
